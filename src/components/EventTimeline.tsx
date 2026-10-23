@@ -1,12 +1,8 @@
-const milestones = [
-  { number: '01', name: 'Registration Open', note: 'Teams are welcome', state: 'OPEN', current: true },
-  { number: '02', name: 'Challenge Unlock', note: 'The brief goes live', state: 'UP NEXT' },
-  { number: '03', name: 'Problem Statements', note: 'Choose your system', state: 'SOON' },
-  { number: '04', name: 'PPT Submission', note: 'Show your process', state: 'PENDING' },
-  { number: '05', name: 'Shortlisting', note: 'Final review', state: 'PENDING' },
-] as const;
+import { phasePresentation, timelineMilestones, type EventPhase } from '../config/event';
 
-export function EventTimeline() {
+export function EventTimeline({ phase }: { phase: EventPhase }) {
+  const { timelineStates, challengeMilestone, currentMilestone } = phasePresentation[phase];
+
   return (
     <section className="timeline section-rule" id="timeline" aria-labelledby="timeline-title">
       <div className="timeline__intro">
@@ -20,14 +16,14 @@ export function EventTimeline() {
       </div>
 
       <ol className="timeline__list">
-        {milestones.map((item) => (
-          <li className={`timeline__item${'current' in item && item.current ? ' is-current' : ''}`} key={item.number}>
+        {timelineMilestones.map((item, index) => (
+          <li className={`timeline__item${currentMilestone === index ? ' is-current' : ''}`} key={item.number}>
             <span className="timeline__number">{item.number}</span>
             <div className="timeline__copy">
-              <h3>{item.name}</h3>
-              <p>{item.note}</p>
+              <h3>{index === 1 ? challengeMilestone.name : item.name}</h3>
+              <p>{index === 1 ? challengeMilestone.note : item.note}</p>
             </div>
-            <span className="timeline__state">{item.state}</span>
+            <span className="timeline__state">{timelineStates[index]}</span>
           </li>
         ))}
       </ol>

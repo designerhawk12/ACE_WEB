@@ -1,8 +1,9 @@
 import { useCallback, useRef, useState } from 'react';
-import { ChallengeStatus } from './components/ChallengeStatus';
 import { CinematicIntro } from './components/CinematicIntro';
+import { EventClue } from './components/EventClue';
+import { EventPhaseContent } from './components/EventPhaseContent';
 import { EventTimeline } from './components/EventTimeline';
-import { eventConfig } from './config/event';
+import { eventConfig, phasePresentation } from './config/event';
 
 function BrandMark() {
   return (
@@ -50,7 +51,8 @@ export default function App() {
             <a href="#challenge">THE CHALLENGE</a>
             <a href="#timeline">SEQUENCE</a>
           </nav>
-          <span className="header-status"><i aria-hidden="true" /> EVENT / TEASER</span>
+          <span className="header-status"><i aria-hidden="true" /> {phasePresentation[eventConfig.eventPhase].headerLabel}</span>
+          <EventClue slot="header" />
         </header>
 
         <main id="main-content" ref={mainRef} tabIndex={-1}>
@@ -60,6 +62,7 @@ export default function App() {
                 <span className="eyebrow">ACE PRESENTS</span>
                 <span className="hero__rule" aria-hidden="true" />
                 <span className="eyebrow">RESEARCH / 001</span>
+                <EventClue slot="hero" />
               </div>
               <h1 className="hero__title" id="hero-title">
                 <span className="hero__title-serif">Reverse</span>
@@ -112,7 +115,7 @@ export default function App() {
             </a>
           </section>
 
-          <ChallengeStatus phase={eventConfig.eventPhase} />
+          <EventPhaseContent phase={eventConfig.eventPhase} />
 
           <section className="about section-rule page-gutter" aria-labelledby="about-title">
             <div className="section-index">
@@ -125,12 +128,13 @@ export default function App() {
               <div className="about__description">
                 <p>Reverse engineering starts with what you can observe. Work backward through a system, object, or process to understand the decisions and mechanisms inside it.</p>
                 <p>In this challenge, curiosity is your tool kit. Investigate, form a theory, test it against evidence, then make your reasoning clear.</p>
+                <EventClue slot="about" />
                 <a className="inline-link" href="#timeline">FOLLOW THE SEQUENCE <span aria-hidden="true">↓</span></a>
               </div>
             </div>
           </section>
 
-          <EventTimeline />
+          <EventTimeline phase={eventConfig.eventPhase} />
         </main>
 
         <footer className="site-footer page-gutter">
@@ -141,6 +145,7 @@ export default function App() {
           <div className="site-footer__detail">
             <span>ACE CLUB / REVERSE ENGINEERING</span>
             <span>THE DETAILS ARE IN THE DISASSEMBLY.</span>
+            <EventClue slot="footer" />
           </div>
           <a className="back-to-top" href="#top">BACK TO TOP <span aria-hidden="true">↑</span></a>
         </footer>
