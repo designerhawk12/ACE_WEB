@@ -3,7 +3,7 @@ import { CinematicIntro } from './components/CinematicIntro';
 import { EventClue } from './components/EventClue';
 import { EventPhaseContent } from './components/EventPhaseContent';
 import { EventTimeline } from './components/EventTimeline';
-import { eventConfig, phasePresentation } from './config/event';
+import { eventConfig, getPublicEventUrl, phasePresentation } from './config/event';
 
 function BrandMark() {
   return (
@@ -16,6 +16,29 @@ function BrandMark() {
 
 function ArrowIcon() {
   return <span className="arrow-icon" aria-hidden="true">↗</span>;
+}
+
+type EventActionProps = {
+  className: string;
+  href: string;
+  index: string;
+  label: string;
+  state: string;
+};
+
+function EventAction({ className, href, index, label, state }: EventActionProps) {
+  const publicUrl = getPublicEventUrl(href);
+  const content = <>
+    <span className="action-card__index">{index} / {publicUrl ? state : 'LINK PENDING'}</span>
+    <span className="action-card__label">{label}</span>
+    <ArrowIcon />
+  </>;
+
+  if (!publicUrl) {
+    return <button aria-label={`${label} — link pending`} className={`action-card ${className} action-card--pending`} disabled title="Link pending; check back soon" type="button">{content}</button>;
+  }
+
+  return <a className={`action-card ${className}`} href={publicUrl} rel="noopener noreferrer" target="_blank">{content}</a>;
 }
 
 export default function App() {
@@ -103,16 +126,8 @@ export default function App() {
           </section>
 
           <section className="action-band page-gutter" aria-label="Event actions">
-            <a className="action-card action-card--register" href={eventConfig.registrationUrl} target="_blank" rel="noreferrer">
-              <span className="action-card__index">01 / OPEN</span>
-              <span className="action-card__label">REGISTER FOR EVENT</span>
-              <ArrowIcon />
-            </a>
-            <a className="action-card action-card--whatsapp" href={eventConfig.whatsappUrl} target="_blank" rel="noreferrer">
-              <span className="action-card__index">02 / CONNECT</span>
-              <span className="action-card__label">JOIN WHATSAPP GROUP</span>
-              <ArrowIcon />
-            </a>
+            <EventAction className="action-card--register" href={eventConfig.registrationUrl} index="01" label="REGISTER FOR EVENT" state="OPEN" />
+            <EventAction className="action-card--whatsapp" href={eventConfig.whatsappUrl} index="02" label="JOIN WHATSAPP GROUP" state="CONNECT" />
           </section>
 
           <EventPhaseContent phase={eventConfig.eventPhase} />

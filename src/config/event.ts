@@ -25,15 +25,28 @@ type EventConfig = {
 // Browser-delivered configuration is inspectable. Never put answer-bearing secrets here.
 export const eventConfig: EventConfig = {
   eventPhase: 'teaser',
+  // LAUNCH BLOCKER: replace both placeholders with the real public URLs before publishing.
   registrationUrl: 'https://example.com/register',
   whatsappUrl: 'https://chat.whatsapp.com/placeholder',
   puzzle: null,
   problemStatement: null,
 };
 
+export function getPublicEventUrl(value: string): string | null {
+  try {
+    const url = new URL(value);
+    if (url.protocol !== 'https:') return null;
+    if (url.hostname === 'example.com' || url.hostname.endsWith('.example.com')) return null;
+    if (/placeholder|replace[-_]?me/i.test(url.pathname + url.search)) return null;
+    return url.href;
+  } catch {
+    return null;
+  }
+}
+
 export const timelineMilestones = [
   { number: '01', name: 'Registration Open', note: 'Teams are welcome' },
-  { number: '02', name: 'Challenge Unlock', note: 'The brief goes live' },
+  { number: '02', name: 'Decoding Challenge', note: 'Decode to access the brief' },
   { number: '03', name: 'Problem Statements', note: 'Choose your system' },
   { number: '04', name: 'PPT Submission', note: 'Show your process' },
   { number: '05', name: 'Shortlisting', note: 'Final review' },
@@ -46,6 +59,7 @@ type PhasePresentation = {
     status: string;
     headline: string;
     description: string;
+    pendingRegistrationDescription?: string;
     plateCaption: string;
   };
   timelineStates: readonly [string, string, string, string, string];
@@ -61,10 +75,11 @@ export const phasePresentation: Record<EventPhase, PhasePresentation> = {
       status: 'PHASE 00 / PREPARING',
       headline: 'COMING SOON',
       description: 'The brief is being prepared. Get registered and stay close for the unlock.',
+      pendingRegistrationDescription: 'The brief is being prepared. Registration details will follow; stay close for the unlock.',
       plateCaption: 'OBJECTIVE / AWAITING RELEASE',
     },
     timelineStates: ['OPEN', 'UP NEXT', 'SOON', 'PENDING', 'PENDING'],
-    challengeMilestone: { name: 'Challenge Unlock', note: 'The brief goes live' },
+    challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the brief' },
     currentMilestone: 0,
   },
   puzzle: {

@@ -1,4 +1,4 @@
-import { phasePresentation, type EventPhase } from '../config/event';
+import { eventConfig, getPublicEventUrl, phasePresentation, type EventPhase } from '../config/event';
 
 type ChallengeStatusProps = {
   phase: EventPhase;
@@ -6,6 +6,9 @@ type ChallengeStatusProps = {
 
 export function ChallengeStatus({ phase }: ChallengeStatusProps) {
   const content = phasePresentation[phase].challenge;
+  const description = phase === 'teaser' && !getPublicEventUrl(eventConfig.registrationUrl)
+    ? content.pendingRegistrationDescription ?? content.description
+    : content.description;
 
   return (
     <section className="challenge section-rule" id="challenge" aria-labelledby="challenge-title">
@@ -19,7 +22,7 @@ export function ChallengeStatus({ phase }: ChallengeStatusProps) {
         <div className="challenge__heading">
           <p className="eyebrow challenge__kicker">{content.label}</p>
           <h2 id="challenge-title">{content.headline}</h2>
-          <p className="challenge__description">{content.description}</p>
+          <p className="challenge__description">{description}</p>
         </div>
 
         <div className="challenge__plate" aria-label={`${content.label}: ${content.headline}`}>
