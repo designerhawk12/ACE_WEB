@@ -27,7 +27,7 @@ export default function App() {
 
     introDismissedRef.current = true;
     setIntroOpen(false);
-    window.requestAnimationFrame(() => mainRef.current?.focus());
+    window.requestAnimationFrame(() => mainRef.current?.focus({ preventScroll: true }));
   }, []);
 
   const completeIntro = useCallback(() => dismissIntro(), [dismissIntro]);
