@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { ChallengeStatus } from './components/ChallengeStatus';
+import { CinematicIntro } from './components/CinematicIntro';
 import { EventTimeline } from './components/EventTimeline';
-import { IntroPlaceholder } from './components/IntroPlaceholder';
 import { eventConfig } from './config/event';
 
 function BrandMark() {
@@ -19,18 +19,31 @@ function ArrowIcon() {
 
 export default function App() {
   const [introOpen, setIntroOpen] = useState(true);
+  const introDismissedRef = useRef(false);
   const mainRef = useRef<HTMLElement>(null);
-  const enterSite = useCallback(() => {
+
+  const dismissIntro = useCallback(() => {
+    if (introDismissedRef.current) return;
+
+    introDismissedRef.current = true;
     setIntroOpen(false);
     window.requestAnimationFrame(() => mainRef.current?.focus());
   }, []);
 
+  const completeIntro = useCallback(() => dismissIntro(), [dismissIntro]);
+  const skipIntro = useCallback(() => dismissIntro(), [dismissIntro]);
+
   return (
     <>
-      <a className="skip-link" href="#main-content">Skip to content</a>
-      {introOpen && <IntroPlaceholder onEnter={enterSite} />}
+      {introOpen && <CinematicIntro onComplete={completeIntro} onSkip={skipIntro} />}
+      <a className="skip-link" href="#main-content" hidden={introOpen}>Skip to content</a>
 
-      <div className="site-shell" id="top">
+      <div
+        aria-hidden={introOpen || undefined}
+        className={`site-shell${introOpen ? ' site-shell--intro-active' : ''}`}
+        id="top"
+        inert={introOpen ? true : undefined}
+      >
         <header className="site-header page-gutter">
           <BrandMark />
           <nav className="site-nav" aria-label="Main navigation">
