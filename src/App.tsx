@@ -87,6 +87,7 @@ export default function App() {
           <section className="hero page-gutter" aria-labelledby="hero-title">
             <div className="hero__copy">
               <div className="hero__metadata">
+                {(phase === 'puzzle' || phase === 'problem-unlocked') && <span className="index-number" aria-label="Section 01">01</span>}
                 <span className="eyebrow">ACE PRESENTS</span>
                 <span className="hero__rule" aria-hidden="true" />
                 <span className="eyebrow">RESEARCH / 001</span>

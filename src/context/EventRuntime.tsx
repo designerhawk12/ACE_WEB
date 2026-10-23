@@ -3,6 +3,8 @@ import { eventConfig, type EventPhase, type ProblemStatement, type PuzzleContent
 import { turingProtocol } from '../config/turingProtocol';
 
 const SESSION_KEY = 'ace-puzzle-unlocked';
+// Old protocol solutions must not unlock this revised reconstruction.
+const SESSION_REVISION = 'turing-protocol-002';
 type EventRuntime = {
   phase: EventPhase;
   isDevPreview: boolean;
@@ -20,7 +22,7 @@ export function EventProvider({ children }: { children: ReactNode }) {
   const puzzleActive = configuredPhase === 'puzzle' || configuredPhase === 'problem-unlocked';
   const [accessGranted, setAccessGranted] = useState(() => {
     if (!puzzleActive) return false;
-    try { return sessionStorage.getItem(SESSION_KEY) === 'true'; } catch { return false; }
+    try { return sessionStorage.getItem(SESSION_KEY) === SESSION_REVISION; } catch { return false; }
   });
   const [previewStatement, setPreviewStatement] = useState<ProblemStatement | null>(null);
   useEffect(() => {
@@ -34,7 +36,7 @@ export function EventProvider({ children }: { children: ReactNode }) {
   }, [isDevPreview]);
   const markSolved = useCallback(() => {
     setAccessGranted(true);
-    try { sessionStorage.setItem(SESSION_KEY, 'true'); } catch { /* In-memory unlock still works. */ }
+    try { sessionStorage.setItem(SESSION_KEY, SESSION_REVISION); } catch { /* In-memory unlock still works. */ }
   }, []);
   const reset = useCallback(() => {
     setAccessGranted(false);

@@ -364,6 +364,20 @@ button { font: inherit; }
 .puzzle-stage .problem-reveal h2 { font-size: clamp(1.8rem, 4vw, 3rem); }
 .puzzle-stage__annotation { margin-top: 2rem; }
 .puzzle-reset { min-height: 2.75rem; margin-top: 1rem; padding: .6rem 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; color: var(--paper-muted); font: 500 .69rem/1.5 var(--mono); cursor: pointer; }
+.submission-next { margin-top: 3rem; padding-block: 2rem; border-top: 1px solid var(--red); }
+.submission-next h2 { max-width: 20ch; margin: 1.3rem 0; font-size: clamp(2rem, 4vw, 3.8rem); font-weight: 550; line-height: 1.05; letter-spacing: -.05em; }
+.submission-next > p:not(.eyebrow), .submission-next ol { max-width: 48rem; color: var(--paper-muted); font-size: 1rem; line-height: 1.75; }
+.submission-next .submission-next__notice { color: var(--paper); padding-left: 1rem; border-left: 2px solid var(--red); }
+.submission-next ol { padding-left: 1.4rem; margin-block: 1.5rem 2rem; }
+.submission-next li + li { margin-top: .6rem; }
+.submission-next__deadline { display: flex; flex-direction: column; gap: .6rem; margin-block: 2rem 1.5rem; }
+.submission-next__deadline > :last-child { color: var(--paper); font-size: 1.1rem; line-height: 1.5; }
+.submission-action { display: flex; width: 100%; max-width: 48rem; min-height: 3.5rem; justify-content: space-between; align-items: center; gap: 1rem; padding: 1rem 0; border: 0; border-block: 1px solid var(--line); background: transparent; color: var(--paper); font: 600 1rem/1.4 var(--mono); text-align: left; }
+.submission-action > :last-child { color: var(--red); transition: transform .18s ease; }
+.submission-action:hover > :last-child, .submission-action:focus-visible > :last-child { transform: translate(2px, -2px); }
+.submission-action:disabled { color: var(--paper-muted); cursor: not-allowed; }
+.submission-action:disabled > :last-child { color: var(--steel); transform: none; }
+.submission-phase { padding-bottom: 4rem; }
 @media (min-width: 1100px) {
   .puzzle-challenge { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4rem; }
   .puzzle-challenge__workspace { justify-self: end; }

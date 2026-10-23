@@ -8,6 +8,7 @@ import { ProblemStatementReveal } from './ProblemStatementReveal';
 import { PuzzleChallenge } from './PuzzleChallenge';
 import { PuzzleSuccess } from './PuzzleSuccess';
 import { EventClue } from './EventClue';
+import { SubmissionNextSteps } from './SubmissionNextSteps';
 
 export default function PuzzlePhase({ puzzle }: { puzzle: PuzzleContent }) {
   const { accessGranted, markSolved, reset, isDevPreview, statement } = useEventRuntime();
@@ -66,6 +67,7 @@ export default function PuzzlePhase({ puzzle }: { puzzle: PuzzleContent }) {
       <PuzzleSuccess headingRef={successRef} />
       {statement ? <ProblemStatementReveal statement={statement} development={isDevPreview} />
         : <p className="puzzle-stage__pending" role="status">Your reconstruction is verified. The event brief is awaiting release.</p>}
+      <SubmissionNextSteps />
     </> : <PuzzleChallenge content={puzzle} onSubmitAnswer={submit} feedback={feedback} attempts={attempts} locked={status !== 'idle'} inputRef={inputRef} />}
     {status === 'accepted' && !accessGranted && <motion.div className="puzzle-confirmation" aria-hidden="true" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: reduced ? 0 : 0.65, ease: 'easeInOut' }} onAnimationComplete={markSolved} />}
     <div className="puzzle-stage__annotation"><EventClue slot="challenge" /></div>

@@ -18,6 +18,9 @@ type EventConfig = {
   eventPhase: EventPhase;
   registrationUrl: string;
   whatsappUrl: string;
+  submissionUrl: string | null;
+  /** ISO 8601 date/time with explicit timezone, e.g. a Z or +05:30 suffix. */
+  submissionDeadline: string | null;
   puzzle: PuzzleContent | null;
   problemStatement: ProblemStatement | null;
 };
@@ -28,11 +31,15 @@ export const eventConfig: EventConfig = {
   // LAUNCH BLOCKER: replace both placeholders with the real public URLs before publishing.
   registrationUrl: 'https://example.com/register',
   whatsappUrl: 'https://chat.whatsapp.com/placeholder',
+  // Second-stage final submission. Supply separately; never reuse initial registration.
+  submissionUrl: null,
+  submissionDeadline: null,
   puzzle: null,
   problemStatement: null,
 };
 
-export function getPublicEventUrl(value: string): string | null {
+export function getPublicEventUrl(value: string | null): string | null {
+  if (!value) return null;
   try {
     const url = new URL(value);
     if (url.protocol !== 'https:') return null;
