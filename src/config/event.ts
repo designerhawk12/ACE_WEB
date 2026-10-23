@@ -1,6 +1,6 @@
 export const eventPhases = ['teaser', 'puzzle', 'problem-unlocked', 'submission', 'closed'] as const;
 export type EventPhase = (typeof eventPhases)[number];
-export type ClueSlot = 'header' | 'hero' | 'about' | 'footer';
+export type ClueSlot = 'header' | 'hero' | 'sequence' | 'about' | 'challenge' | 'actions' | 'footer';
 
 export type PuzzleContent = {
   scrambledLines: readonly string[];

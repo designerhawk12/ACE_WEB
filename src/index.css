@@ -301,3 +301,67 @@ button { font: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+
+/* Scroll-led teaser: the original identity and mechanical opening share the live hero geometry. */
+.site-shell { overflow: clip; }
+.hero { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: 'metadata' 'title' 'media' 'closing' 'scroll'; align-content: center; gap: 1.5rem; padding-block: 3.5rem 4.5rem; }
+.hero__copy { display: contents; }
+.hero__metadata { grid-area: metadata; flex-wrap: wrap; gap: .65rem; }
+.hero__title { grid-area: title; margin: .6rem 0; min-width: 0; }
+.hero__title-serif { font-size: clamp(4rem, 20vw, 6rem); }
+.hero__title-sans { font-size: clamp(1.85rem, 9.4vw, 2.75rem); }
+.hero__closing { grid-area: closing; max-width: none; margin-top: .5rem; gap: 1rem; }
+.hero__scroll { grid-area: scroll; width: max-content; margin-top: .25rem; }
+.hero-media { grid-area: media; width: 100%; min-width: 0; margin: 0; align-self: center; }
+.hero-media__surface { position: relative; aspect-ratio: 16 / 9; background: var(--ink); mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent), linear-gradient(0deg, transparent, #000 9%, #000 91%, transparent); mask-composite: intersect; }
+.hero-media video, .hero-media img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.hero-media__caption { display: flex; min-height: 2.75rem; justify-content: space-between; align-items: center; gap: .75rem; color: var(--paper-muted); font: 500 .69rem/1.5 var(--mono); letter-spacing: .06em; }
+.hero-media__caption button { min-height: 2.75rem; border: 0; padding: .5rem 0 .5rem .5rem; background: transparent; color: var(--paper-muted); cursor: pointer; font: inherit; font-size: .65rem; }
+.hero-media__caption button:hover { color: var(--paper); }
+.timeline { grid-template-columns: minmax(0, 1fr); }
+.timeline__progress { position: absolute; top: 1.6rem; bottom: 1.6rem; left: .82rem; width: 1px; background: var(--red); list-style: none; }
+.about__drawing { position: relative; width: min(100%, 480px); margin: 3rem auto 0; color: var(--paper-muted); opacity: .65; }
+.about__drawing .drawing-annotation { right: 0; }
+.drawing-caption, .drawing-annotation { font-size: .69rem; }
+.challenge { position: relative; }
+.challenge__reveal-rule { position: absolute; top: -1px; left: 0; width: 100%; height: 1px; background: var(--red); }
+.challenge__heading h2 { overflow: hidden; padding-bottom: .1em; }
+.challenge__headline { display: block; }
+.participate { padding-block: clamp(4rem, 8vw, 7rem); }
+.participate__heading { margin: 2.5rem 0; font-size: clamp(2.8rem, 6vw, 6rem); font-weight: 550; line-height: 1; letter-spacing: -.065em; }
+.participate .action-band { grid-template-columns: minmax(0, 1fr); }
+.participate .action-card { min-height: 7rem; padding: 1.5rem 0; }
+.participate .action-card + .action-card { border-left: 0; border-top: 1px solid var(--line); }
+.participate .action-card__label { font-size: clamp(1.3rem, 3vw, 2.6rem); letter-spacing: -.035em; }
+.action-card:focus-visible .arrow-icon { transform: translate(2px, -2px); }
+.event-clue[lang='ja'] { font-family: var(--mono), 'Yu Gothic', 'Hiragino Kaku Gothic ProN', sans-serif; }
+@media (max-width: 699px) {
+  .page-gutter { padding-inline: clamp(1.25rem, 6vw, 1.5rem); }
+  .about, .challenge, .timeline, .participate { padding-block: 4.5rem; }
+  .challenge, .timeline { padding-inline: clamp(1.25rem, 6vw, 1.5rem); }
+  .eyebrow, .header-status, .hero__side-note, .hero__scroll, .action-card__index, .timeline__copy p, .timeline__state, .timeline__number, .site-footer__detail, .back-to-top, .inline-link { font-size: .69rem; }
+  .about__description p, .timeline__intro > p, .challenge__description { font-size: 1rem; }
+  .challenge__plate-top, .challenge__plate-bottom, .challenge__plate-center p, .challenge__plate-caption { font-size: .69rem; }
+  .timeline__item { grid-template-columns: 1.9rem minmax(0, 1fr) auto; gap: .5rem; min-height: 6.5rem; }
+  .timeline__copy h3 { font-size: 1rem; }
+  .paper-ink-line { font-size: 34px; }
+  .cinematic-intro__bottomline > p { font-size: .58rem; }
+  .text-action { font-size: .69rem; }
+}
+@media (min-width: 700px) and (max-width: 1099px) {
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .hero__title-serif { font-size: 7rem; }
+  .hero__title-sans { font-size: 3.6rem; }
+  .hero-media { width: min(100%, 640px); justify-self: center; }
+  .hero__closing { flex-direction: row; }
+  .challenge__layout { grid-template-columns: minmax(0, 1fr); }
+}
+@media (min-width: 1100px) {
+  .hero { grid-template-columns: minmax(0, 56fr) minmax(0, 44fr); grid-template-areas: 'metadata media' 'title media' 'closing media' 'scroll media'; gap: 1.6rem 1rem; min-height: min(850px, calc(100svh - 5.8rem)); }
+  .hero__title-serif { font-size: clamp(5.5rem, 9vw, 9rem); }
+  .hero__title-sans { font-size: clamp(2.6rem, 4.6vw, 4.6rem); }
+  .hero__closing { flex-direction: column; align-items: flex-start; }
+  .timeline { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); }
+  .timeline__intro { position: sticky; top: 6rem; }
+  .about__drawing { margin: 3rem 0 0 auto; width: 40%; }
+}

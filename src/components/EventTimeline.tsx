@@ -1,4 +1,5 @@
 import { eventConfig, getPublicEventUrl, phasePresentation, timelineMilestones, type EventPhase } from '../config/event';
+import { EventClue } from './EventClue';
 
 export function EventTimeline({ phase }: { phase: EventPhase }) {
   const { timelineStates, challengeMilestone, currentMilestone } = phasePresentation[phase];
@@ -8,15 +9,17 @@ export function EventTimeline({ phase }: { phase: EventPhase }) {
     <section className="timeline section-rule" id="timeline" aria-labelledby="timeline-title">
       <div className="timeline__intro">
         <div className="section-index">
-          <span className="index-number">04</span>
+          <span className="index-number">02</span>
           <span className="index-line" aria-hidden="true" />
           <span className="eyebrow">SEQUENCE / STATUS</span>
         </div>
         <h2 id="timeline-title">A process,<br /><em>in five parts.</em></h2>
         <p>The order of operations. The next marker appears when it is time.</p>
+        <EventClue slot="sequence" />
       </div>
 
       <ol className="timeline__list">
+        <li className="timeline__progress" aria-hidden="true" />
         {timelineMilestones.map((item, index) => {
           const pendingRegistration = index === 0 && registrationPending;
           const name = pendingRegistration ? 'Registration Pending' : index === 1 ? challengeMilestone.name : item.name;

@@ -68,7 +68,7 @@ function CinematicIntroContent({ onComplete, onSkip }: CinematicIntroProps) {
       const width = window.innerWidth;
       const height = window.innerHeight;
       const scale = width < 700
-        ? Math.min(width / 800, height / 900)
+        ? Math.min(width / 760, height / 900)
         : Math.min(width / 1200, height / 900, 1.25);
 
       stageRef.current?.style.setProperty('--intro-stage-scale', String(scale));

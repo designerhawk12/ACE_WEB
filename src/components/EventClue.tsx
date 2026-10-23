@@ -6,5 +6,5 @@ export function EventClue({ slot }: { slot: ClueSlot }) {
   const clue = eventConfig.puzzle?.clues[slot];
   if (!clue) return null;
 
-  return <span className="eyebrow event-clue" data-clue-slot={slot}>{clue}</span>;
+  return <span className="eyebrow event-clue" lang="ja" data-clue-slot={slot}>{clue}</span>;
 }

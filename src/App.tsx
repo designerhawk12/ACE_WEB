@@ -3,6 +3,8 @@ import { CinematicIntro } from './components/CinematicIntro';
 import { EventClue } from './components/EventClue';
 import { EventPhaseContent } from './components/EventPhaseContent';
 import { EventTimeline } from './components/EventTimeline';
+import { HeroVideo } from './components/HeroVideo';
+import { useTeaserMotion } from './hooks/useTeaserMotion';
 import { eventConfig, getPublicEventUrl, phasePresentation } from './config/event';
 
 function BrandMark() {
@@ -45,6 +47,7 @@ export default function App() {
   const [introOpen, setIntroOpen] = useState(true);
   const introDismissedRef = useRef(false);
   const mainRef = useRef<HTMLElement>(null);
+  useTeaserMotion(mainRef, !introOpen);
 
   const dismissIntro = useCallback(() => {
     if (introDismissedRef.current) return;
@@ -95,13 +98,29 @@ export default function App() {
                 <p className="hero__tagline">Take it apart.<br />Trace the logic. Tell the story.</p>
                 <p className="hero__side-note">A CHALLENGE IN CURIOSITY,<br />SYSTEMS &amp; CREATIVE THINKING.</p>
               </div>
-              <a className="hero__scroll" href="#challenge">
+              <a className="hero__scroll" href="#timeline">
                 <span className="hero__scroll-line" aria-hidden="true" />
                 SCROLL TO EXPLORE
               </a>
             </div>
 
-            <div className="hero__drawing" aria-hidden="true">
+            <HeroVideo active={!introOpen} />
+          </section>
+
+          <EventTimeline phase={eventConfig.eventPhase} />
+
+          <section className="about section-rule page-gutter" aria-labelledby="about-title">
+            <div className="section-index"><span className="index-number">03</span><span className="index-line" aria-hidden="true" /><span className="eyebrow">WHAT IS REVERSE ENGINEERING?</span></div>
+            <div className="about__content">
+              <h2 id="about-title">Understand the thing<br /><em>by unmaking the mystery.</em></h2>
+              <div className="about__description">
+                <p>Reverse engineering starts with what you can observe. Work backward through a system, object, or process to understand the decisions and mechanisms inside it.</p>
+                <p>In this challenge, curiosity is your tool kit. Investigate, form a theory, test it against evidence, then make your reasoning clear.</p>
+                <EventClue slot="about" />
+                <a className="inline-link" href="#challenge">EXPLORE THE CHALLENGE <span aria-hidden="true">↓</span></a>
+              </div>
+            </div>
+            <div className="about__drawing" aria-hidden="true">
               <div className="drawing-caption drawing-caption--top"><span>FIG. 01</span><span>ASSEMBLY / UNKNOWN</span></div>
               <svg viewBox="0 0 520 520" className="schematic" focusable="false">
                 <defs>
@@ -125,31 +144,17 @@ export default function App() {
             </div>
           </section>
 
-          <section className="action-band page-gutter" aria-label="Event actions">
-            <EventAction className="action-card--register" href={eventConfig.registrationUrl} index="01" label="REGISTER FOR EVENT" state="OPEN" />
-            <EventAction className="action-card--whatsapp" href={eventConfig.whatsappUrl} index="02" label="JOIN WHATSAPP GROUP" state="CONNECT" />
-          </section>
-
           <EventPhaseContent phase={eventConfig.eventPhase} />
 
-          <section className="about section-rule page-gutter" aria-labelledby="about-title">
-            <div className="section-index">
-              <span className="index-number">03</span>
-              <span className="index-line" aria-hidden="true" />
-              <span className="eyebrow">WHAT IS REVERSE ENGINEERING?</span>
+          <section className="participate section-rule page-gutter" id="participate" aria-labelledby="participate-title">
+            <div className="section-index"><span className="index-number">05</span><span className="index-line" aria-hidden="true" /><span className="eyebrow">PARTICIPATE</span></div>
+            <h2 className="participate__heading" id="participate-title">Take the next step.</h2>
+            <div className="action-band">
+              <EventAction className="action-card--register" href={eventConfig.registrationUrl} index="01 / REGISTER" label="Register for Event" state="OPEN" />
+              <EventAction className="action-card--whatsapp" href={eventConfig.whatsappUrl} index="02 / CONNECT" label="Join WhatsApp Group" state="CONNECT" />
             </div>
-            <div className="about__content">
-              <h2 id="about-title">Understand the thing<br /><em>by unmaking the mystery.</em></h2>
-              <div className="about__description">
-                <p>Reverse engineering starts with what you can observe. Work backward through a system, object, or process to understand the decisions and mechanisms inside it.</p>
-                <p>In this challenge, curiosity is your tool kit. Investigate, form a theory, test it against evidence, then make your reasoning clear.</p>
-                <EventClue slot="about" />
-                <a className="inline-link" href="#timeline">FOLLOW THE SEQUENCE <span aria-hidden="true">↓</span></a>
-              </div>
-            </div>
+            <EventClue slot="actions" />
           </section>
-
-          <EventTimeline phase={eventConfig.eventPhase} />
         </main>
 
         <footer className="site-footer page-gutter">
