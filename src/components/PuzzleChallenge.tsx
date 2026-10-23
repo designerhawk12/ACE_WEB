@@ -1,55 +1,43 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent, type RefObject } from 'react';
 import type { PuzzleContent } from '../config/event';
 import { PuzzleRules } from './PuzzleRules';
 
 type PuzzleChallengeProps = {
   content: PuzzleContent;
-  feedback?: string;
-  onSubmitAnswer?: (answer: string) => void;
+  feedback: string;
+  attempts: number;
+  locked: boolean;
+  inputRef: RefObject<HTMLInputElement | null>;
+  onSubmitAnswer: (answer: string) => void;
 };
 
-// Presentation and input only. A future verifier must supply onSubmitAnswer.
-export function PuzzleChallenge({ content, feedback, onSubmitAnswer }: PuzzleChallengeProps) {
+export function PuzzleChallenge({ content, feedback, attempts, locked, inputRef, onSubmitAnswer }: PuzzleChallengeProps) {
   const [answer, setAnswer] = useState('');
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (onSubmitAnswer && answer.trim()) onSubmitAnswer(answer.trim());
+    if (answer.trim() && !locked) onSubmitAnswer(answer);
   };
-
-  return (
-    <section className="challenge section-rule puzzle-challenge" id="challenge" aria-labelledby="challenge-title">
-      <div className="section-index">
-        <span className="index-number">02</span>
-        <span className="index-line" aria-hidden="true" />
-        <span className="eyebrow">CURRENT CHALLENGE STATUS</span>
-      </div>
-      <div className="challenge__layout">
-        <div className="challenge__heading">
-          <p className="eyebrow challenge__kicker">DECODING CHALLENGE</p>
-          <h2 id="challenge-title">DECODE THE SIGNAL</h2>
-          <div className="puzzle-challenge__signal" aria-label="Scrambled message">
-            {content.scrambledLines.map((line, index) => <p key={`${index}-${line}`}>{line}</p>)}
-          </div>
-          <form className="puzzle-challenge__form" onSubmit={handleSubmit}>
-            <label className="eyebrow" htmlFor="puzzle-answer">YOUR ANSWER</label>
-            <div className="puzzle-challenge__input-row">
-              <input
-                autoComplete="off"
-                disabled={!onSubmitAnswer}
-                id="puzzle-answer"
-                onChange={(event) => setAnswer(event.target.value)}
-                spellCheck={false}
-                type="text"
-                value={answer}
-              />
-              <button disabled={!onSubmitAnswer || !answer.trim()} type="submit">SUBMIT →</button>
-            </div>
-            <p className="puzzle-challenge__feedback" aria-live="polite">{feedback ?? ''}</p>
-          </form>
+  return <div className="puzzle-challenge">
+    <header className="puzzle-challenge__heading">
+      <p className="eyebrow">DECODING CHALLENGE</p>
+      <h2 id="challenge-title">TURING<br />PROTOCOL</h2>
+      <p className="puzzle-challenge__message">The page has already given you the order.</p>
+    </header>
+    <div className="puzzle-challenge__workspace">
+      <table className="puzzle-grid">
+        <caption className="sr-only">Letter grid. Row numbers on the left; column numbers above.</caption>
+        <thead><tr><td aria-hidden="true" />{[1, 2, 3, 4].map(column => <th key={column} scope="col"><span className="sr-only">Column </span>{column}</th>)}</tr></thead>
+        <tbody>{content.grid.map((row, index) => <tr key={index}><th scope="row"><span className="sr-only">Row </span>{index + 1}</th>{row.map((letter, column) => <td key={column}>{letter}</td>)}</tr>)}</tbody>
+      </table>
+      <form className="puzzle-challenge__form" onSubmit={submit} aria-busy={locked}>
+        <label className="eyebrow" htmlFor="puzzle-answer">RECONSTRUCTED WORD</label>
+        <div className="puzzle-challenge__input-row">
+          <input ref={inputRef} id="puzzle-answer" value={answer} onChange={event => setAnswer(event.target.value)} disabled={locked} autoComplete="off" autoCapitalize="characters" spellCheck={false} maxLength={100} aria-describedby="puzzle-feedback" enterKeyHint="go" type="text" />
+          <button type="submit" disabled={locked || !answer.trim()}>DECODE <span aria-hidden="true">→</span></button>
         </div>
-        <PuzzleRules rules={content.rules} />
-      </div>
-    </section>
-  );
+        <p className="puzzle-challenge__feedback" id="puzzle-feedback" role="status" aria-atomic="true"><span key={`${attempts}-${feedback}`}>{feedback}{attempts > 0 && <span className="sr-only"> Attempt {attempts}.</span>}</span></p>
+      </form>
+      <PuzzleRules rules={content.rules} />
+    </div>
+  </div>;
 }

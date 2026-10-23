@@ -1,15 +1,10 @@
-export function PuzzleSuccess() {
-  return (
-    <section className="challenge section-rule puzzle-success" id="challenge" aria-labelledby="challenge-title">
-      <div className="section-index">
-        <span className="index-number">02</span>
-        <span className="index-line" aria-hidden="true" />
-        <span className="eyebrow">CHALLENGE VERIFIED</span>
-      </div>
-      <div className="challenge__heading puzzle-success__heading">
-        <p className="eyebrow challenge__kicker">PHASE 02 / UNLOCKED</p>
-        <h2 id="challenge-title">ACCESS GRANTED</h2>
-      </div>
-    </section>
-  );
+import type { RefObject } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
+
+export function PuzzleSuccess({ headingRef }: { headingRef: RefObject<HTMLHeadingElement | null> }) {
+  const reduced = useReducedMotion();
+  return <motion.div className="puzzle-success" initial={{ opacity: reduced ? 1 : 0 }} animate={{ opacity: 1 }} transition={{ duration: reduced ? 0 : 0.3 }}>
+    <p className="eyebrow challenge__kicker">PHASE 02 / UNLOCKED</p>
+    <h2 id="challenge-title" ref={headingRef} tabIndex={-1}>ACCESS GRANTED</h2>
+  </motion.div>;
 }

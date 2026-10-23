@@ -5,6 +5,7 @@ import { EventPhaseContent } from './components/EventPhaseContent';
 import { EventTimeline } from './components/EventTimeline';
 import { HeroVideo } from './components/HeroVideo';
 import { useTeaserMotion } from './hooks/useTeaserMotion';
+import { useEventRuntime } from './context/EventRuntime';
 import { eventConfig, getPublicEventUrl, phasePresentation } from './config/event';
 
 function BrandMark() {
@@ -44,6 +45,7 @@ function EventAction({ className, href, index, label, state }: EventActionProps)
 }
 
 export default function App() {
+  const { phase } = useEventRuntime();
   const [introOpen, setIntroOpen] = useState(true);
   const introDismissedRef = useRef(false);
   const mainRef = useRef<HTMLElement>(null);
@@ -77,7 +79,7 @@ export default function App() {
             <a href="#challenge">THE CHALLENGE</a>
             <a href="#timeline">SEQUENCE</a>
           </nav>
-          <span className="header-status"><i aria-hidden="true" /> {phasePresentation[eventConfig.eventPhase].headerLabel}</span>
+          <span className="header-status"><i aria-hidden="true" /> {phasePresentation[phase].headerLabel}</span>
           <EventClue slot="header" />
         </header>
 
@@ -107,7 +109,7 @@ export default function App() {
             <HeroVideo active={!introOpen} />
           </section>
 
-          <EventTimeline phase={eventConfig.eventPhase} />
+          <EventTimeline phase={phase} />
 
           <section className="about section-rule page-gutter" aria-labelledby="about-title">
             <div className="section-index"><span className="index-number">03</span><span className="index-line" aria-hidden="true" /><span className="eyebrow">WHAT IS REVERSE ENGINEERING?</span></div>
@@ -144,7 +146,7 @@ export default function App() {
             </div>
           </section>
 
-          <EventPhaseContent phase={eventConfig.eventPhase} />
+          <EventPhaseContent phase={phase} />
 
           <section className="participate section-rule page-gutter" id="participate" aria-labelledby="participate-title">
             <div className="section-index"><span className="index-number">05</span><span className="index-line" aria-hidden="true" /><span className="eyebrow">PARTICIPATE</span></div>

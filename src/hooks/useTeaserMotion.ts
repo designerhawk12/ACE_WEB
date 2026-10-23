@@ -16,7 +16,7 @@ export function useTeaserMotion(root: RefObject<HTMLElement | null>, active: boo
         gsap.from(element, { y: desktop ? 16 : 12, opacity: 0, duration: 0.5, ease: 'power2.out', scrollTrigger: { trigger: element, start: 'top 92%', once: true } });
       });
       gsap.from(select('.timeline__progress'), { scaleY: 0, transformOrigin: 'top', ease: 'none', scrollTrigger: { trigger: select('.timeline__list')[0], start: 'top 75%', end: 'bottom 65%', scrub: 0.5 } });
-      const challenge = select('.challenge')[0];
+      const challenge = select('.challenge:not(.puzzle-stage)')[0];
       if (challenge) gsap.timeline({ scrollTrigger: { trigger: challenge, start: 'top 75%', once: true } })
         .from(select('.challenge__reveal-rule'), { scaleX: 0, transformOrigin: 'left', duration: 0.25 })
         .from(select('.challenge__kicker'), { opacity: 0, duration: 0.28 }, 0.12)

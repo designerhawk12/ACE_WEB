@@ -3,7 +3,7 @@ import { EventClue } from './EventClue';
 
 export function EventTimeline({ phase }: { phase: EventPhase }) {
   const { timelineStates, challengeMilestone, currentMilestone } = phasePresentation[phase];
-  const registrationPending = phase === 'teaser' && !getPublicEventUrl(eventConfig.registrationUrl);
+  const registrationPending = !getPublicEventUrl(eventConfig.registrationUrl);
 
   return (
     <section className="timeline section-rule" id="timeline" aria-labelledby="timeline-title">

@@ -3,7 +3,7 @@ export type EventPhase = (typeof eventPhases)[number];
 export type ClueSlot = 'header' | 'hero' | 'sequence' | 'about' | 'challenge' | 'actions' | 'footer';
 
 export type PuzzleContent = {
-  scrambledLines: readonly string[];
+  grid: readonly (readonly string[])[];
   rules: readonly string[];
   clues: Partial<Record<ClueSlot, string>>;
 };
@@ -87,7 +87,7 @@ export const phasePresentation: Record<EventPhase, PhasePresentation> = {
     challenge: {
       label: 'DECODING CHALLENGE',
       status: 'PHASE 01 / LIVE',
-      headline: 'DECODE THE SIGNAL',
+      headline: 'TURING PROTOCOL',
       description: 'A decoding challenge stands between you and the brief.',
       plateCaption: 'OBJECTIVE / DECODE',
     },

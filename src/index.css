@@ -334,7 +334,40 @@ button { font: inherit; }
 .participate .action-card + .action-card { border-left: 0; border-top: 1px solid var(--line); }
 .participate .action-card__label { font-size: clamp(1.3rem, 3vw, 2.6rem); letter-spacing: -.035em; }
 .action-card:focus-visible .arrow-icon { transform: translate(2px, -2px); }
-.event-clue[lang='ja'] { font-family: var(--mono), 'Yu Gothic', 'Hiragino Kaku Gothic ProN', sans-serif; }
+.event-clue[lang='ja'] { font-family: var(--mono), 'Yu Gothic', 'Hiragino Kaku Gothic ProN', sans-serif; font-size: .75rem; }
+.event-clue { display: block; width: fit-content; margin-block: .8rem; color: var(--paper-muted); font-size: .75rem; line-height: 1.7; letter-spacing: .06em; text-transform: none; }
+.hero__metadata .event-clue { flex-basis: 100%; margin: .25rem 0 0; }
+.puzzle-stage { position: relative; }
+.puzzle-challenge { display: grid; gap: 2.5rem; margin-top: 2.5rem; }
+.puzzle-challenge__heading h2, .puzzle-success h2 { margin: 1rem 0; font-size: clamp(2.8rem, 7vw, 6.2rem); font-weight: 650; line-height: .98; letter-spacing: -.065em; overflow-wrap: anywhere; }
+.puzzle-challenge__message, .puzzle-stage__pending { max-width: 29rem; color: var(--paper-muted); font-size: 1rem; line-height: 1.7; }
+.puzzle-challenge__workspace { min-width: 0; width: 100%; max-width: 32rem; }
+.puzzle-grid { width: 100%; border-collapse: collapse; table-layout: fixed; font: 600 clamp(1.2rem, 4vw, 1.7rem)/1.2 var(--mono); text-align: center; }
+.puzzle-grid td, .puzzle-grid th { height: clamp(2.8rem, 6vw, 3.6rem); padding: .4rem; }
+.puzzle-grid td { border: 1px solid var(--line); }
+.puzzle-grid th { color: var(--paper-muted); font-size: .75rem; font-weight: 400; }
+.puzzle-grid th:first-child, .puzzle-grid thead td { width: 1.75rem; border: 0; }
+.puzzle-challenge__input-row { flex-wrap: wrap; }
+.puzzle-challenge__input-row input { min-height: 3rem; width: 100%; font-size: 1rem; }
+.puzzle-challenge__input-row button { min-height: 3rem; min-width: 6rem; font-size: .75rem; cursor: pointer; }
+.puzzle-challenge__feedback { min-height: 3rem; margin-block: .8rem; font-size: .75rem; line-height: 1.6; }
+.puzzle-rules summary { min-height: 3rem; font-size: .75rem; }
+.puzzle-rules summary::marker { content: ''; }
+.puzzle-rules[open] summary span { transform: rotate(45deg); }
+.puzzle-rules ol { font-size: 1rem; padding-right: .25rem; }
+.puzzle-rules__numerals { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0 0 1.5rem; gap: .5rem; color: var(--paper-muted); font: 500 1rem/1.5 var(--mono); }
+.puzzle-rules__numerals > div { display: flex; align-items: center; gap: .4rem; }
+.puzzle-rules__numerals dd { margin: 0; }
+.puzzle-confirmation { height: 1px; margin-top: 2rem; background: var(--red); transform-origin: left; }
+.puzzle-success { margin-block: 3rem; }
+.puzzle-stage .problem-reveal { padding-block: 2rem; }
+.puzzle-stage .problem-reveal h2 { font-size: clamp(1.8rem, 4vw, 3rem); }
+.puzzle-stage__annotation { margin-top: 2rem; }
+.puzzle-reset { min-height: 2.75rem; margin-top: 1rem; padding: .6rem 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; color: var(--paper-muted); font: 500 .69rem/1.5 var(--mono); cursor: pointer; }
+@media (min-width: 1100px) {
+  .puzzle-challenge { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4rem; }
+  .puzzle-challenge__workspace { justify-self: end; }
+}
 @media (max-width: 699px) {
   .page-gutter { padding-inline: clamp(1.25rem, 6vw, 1.5rem); }
   .about, .challenge, .timeline, .participate { padding-block: 4.5rem; }
