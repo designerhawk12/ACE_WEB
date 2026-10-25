@@ -16,7 +16,7 @@ export function EventTimeline({ phase }: { phase: EventPhase }) {
           <span className="index-line" aria-hidden="true" />
           <span className="eyebrow">SEQUENCE / STATUS</span>
         </div>
-        <h2 id="timeline-title">A process,<br /><em>in five parts.</em></h2>
+        <h2 id="timeline-title">A process,<br /><em>in seven parts.</em></h2>
         <p>The order of operations. The next marker appears when it is time.</p>
       </div>
 
@@ -35,7 +35,7 @@ export function EventTimeline({ phase }: { phase: EventPhase }) {
               </div>
               {index < 4
                 ? <ScheduleReadout className="timeline__state" kind={(['registration', 'challenge', 'statements', 'submission'] as const)[index]} />
-                : <span className="timeline__state">PENDING</span>}
+                : <span className="timeline__state">{index === 5 ? 'STARTS ON 30TH OCTOBER' : 'PENDING'}</span>}
             </li>
           );
         })}

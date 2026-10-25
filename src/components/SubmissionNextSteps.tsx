@@ -1,49 +1,78 @@
-import { eventConfig, getPublicEventUrl } from '../config/event';
-import { useEventRuntime } from '../context/EventRuntime';
-import { formatIstDate, isSubmissionOpenAt } from '../config/schedule';
+import { eventConfig } from '../config/event';
+import { formatIstDate } from '../config/schedule';
 import { useScheduleWindow, useSubmissionOpen } from '../hooks/useEventClock';
+import { ScheduleReadout } from './ScheduleReadout';
+import { SubmissionAction } from './SubmissionAction';
 
 export function SubmissionNextSteps() {
-  const { phase, accessGranted, statement } = useEventRuntime();
-  const scheduleWindow = useScheduleWindow();
   const submissionOpen = useSubmissionOpen();
-  if (phase !== 'submission' && !(phase === 'problem-unlocked' && accessGranted)) return null;
-
-  const configuredUrl = getPublicEventUrl(eventConfig.submissionUrl);
+  const scheduleWindow = useScheduleWindow();
+  const domains = eventConfig.domains;
   const deadline = eventConfig.submissionDeadline;
-  const date = deadline && /T.*(?:Z|[+-]\d{2}:\d{2})$/i.test(deadline) ? new Date(deadline) : null;
-  const deadlineLabel = date && !Number.isNaN(date.valueOf()) && deadline ? formatIstDate(deadline) : null;
-  // A missing deadline or duplicated registration link must not become a submission action.
-  const submissionUrl = deadlineLabel && configuredUrl !== getPublicEventUrl(eventConfig.registrationUrl) ? configuredUrl : null;
-  const actionContent = <><span>SUBMIT YOUR PPT</span><span aria-hidden="true">↗</span></>;
+  const validDeadline = deadline && /T.*(?:Z|[+-]\d{2}:\d{2})$/i.test(deadline) && Number.isFinite(Date.parse(deadline));
 
-  return <section className="submission-next" aria-labelledby="submission-next-title">
-    <p className="eyebrow challenge__kicker">NEXT PROTOCOL / FINAL SUBMISSION</p>
-    <h2 id="submission-next-title">Your next step:<br />submit your solution.</h2>
-    <p>{scheduleWindow === 'ended'
-      ? 'The final submission window has closed. Your unlocked brief remains available for reference.'
-      : statement
-      ? 'You’ve unlocked the problem statement. Build your solution, prepare your PPT, and complete the final submission before the deadline.'
-      : 'Review the problem statement when available, build your solution, prepare your PPT, and complete the final submission before the deadline.'}</p>
-    <p className="submission-next__notice">{scheduleWindow === 'ended'
-      ? 'Initial event registration and final PPT submission were separate actions. The final form is now closed.'
-      : 'This is a separate, second-stage submission. You must register/submit again through the final form. Your initial event registration does not submit your PPT.'}</p>
-    <ol>
-      <li>Review the unlocked problem statement and its problem-solving rules.</li>
-      <li>Build your solution and prepare your PPT.</li>
-      <li>Open the separate final submission form below.</li>
-      <li>Enter the required participant/team details and selected problem statement in that form.</li>
-      <li>Submit/upload your PPT in the form before the submission deadline.</li>
-    </ol>
-    <div className="submission-next__deadline">
-      <span className="eyebrow">SUBMISSION DEADLINE</span>
-      {deadlineLabel && deadline ? <time dateTime={deadline}>{deadlineLabel}</time> : <span>To be announced</span>}
-      {scheduleWindow === 'ended' && <strong className="submission-next__ended">SUBMISSIONS ENDED</strong>}
-    </div>
-    {submissionUrl && submissionOpen
-      ? <a className="submission-action" href={submissionUrl} onClick={event => { if (!isSubmissionOpenAt(Date.now())) event.preventDefault(); }} target="_blank" rel="noopener noreferrer">{actionContent}</a>
-      : <button className="submission-action" type="button" disabled aria-label={`Submit your PPT — ${scheduleWindow === 'upcoming' ? 'submission not open yet' : scheduleWindow === 'ended' ? 'submissions ended' : 'submission details pending'}`}>{actionContent}</button>}
-    {scheduleWindow === 'upcoming' && <p className="submission-next__pending">Final submission opens with the decoding challenge. Review the brief and prepare your PPT in the meantime.</p>}
-    {submissionOpen && !submissionUrl && <p className="submission-next__pending">Final submission details pending. Check back for the form and deadline.</p>}
-  </section>;
+  return <div className="unlocked-guide">
+    <section className="unlocked-guide__notice" aria-labelledby="submission-notice-title">
+      <p className="eyebrow">IMPORTANT / TWO SEPARATE STEPS</p>
+      <h3 id="submission-notice-title">Already registered?<br /><em>You’re not done yet.</em></h3>
+      <p>Registration confirms participation. After selecting a Domain and preparing your solution, you or your team must also submit a PPT through the separate final form before the deadline. Enter your participant or team details and selected Domain in that form.</p>
+      <div className="unlocked-guide__deadline">
+        {validDeadline && <ScheduleReadout kind="submission" className="unlocked-guide__countdown" />}
+        <span className="eyebrow">PPT SUBMISSION DEADLINE</span>
+        {validDeadline ? <time dateTime={deadline}>{formatIstDate(deadline)}</time> : <span>To be confirmed</span>}
+      </div>
+      <SubmissionAction />
+    </section>
+
+    <section className="unlocked-guide__section" aria-labelledby="reverse-explained-title">
+      <p className="eyebrow">01 / THE METHOD</p>
+      <h3 id="reverse-explained-title">What is Reverse Engineering?</h3>
+      <p>Reverse engineering means studying an existing product or software system to understand how it works: its functions, services, and behavior. You then recreate or improve a selected part without access to its original implementation.</p>
+    </section>
+
+    <section className="unlocked-guide__rule" aria-labelledby="eligibility-rule-title">
+      <p className="eyebrow">02 / ELIGIBILITY</p>
+      <h3 id="eligibility-rule-title">The rule<span>.</span></h3>
+      <p>The application you choose must <strong>not be open source.</strong></p>
+      <p>Choose any application within a provided Domain. Do not start from or reuse the application’s existing source code.</p>
+    </section>
+
+    <section className="unlocked-guide__section" aria-labelledby="participant-task-title">
+      <p className="eyebrow">03 / THE WORK</p>
+      <h3 id="participant-task-title">What you have to do</h3>
+      <ol className="unlocked-guide__steps">
+        <li><span>01</span><p>Choose an application that fits one of the Domains. It must not be open source.</p></li>
+        <li><span>02</span><p>Study its function, service, workflow, behavior, and user experience. Select one existing feature to recreate.</p></li>
+        <li><span>03</span><p>Build that feature yourself from scratch, without the original codebase. You do not need to recreate the entire application.</p></li>
+        <li><span>04</span><p>Add something of your own: a useful improvement, missing feature, creative extension, or better workflow.</p></li>
+        <li><span>05</span><p><strong>A functioning prototype is mandatory.</strong> It must demonstrate the recreated feature and your addition. An idea, static design, or PPT alone is not enough.</p></li>
+      </ol>
+    </section>
+
+    <section className="unlocked-guide__section" aria-labelledby="evaluation-title">
+      <p className="eyebrow">04 / EVALUATION</p>
+      <h3 id="evaluation-title">How your work is evaluated</h3>
+      <div className="unlocked-guide__criteria">
+        <div><h4>CREATIVITY</h4><p>How thoughtful, original, and useful your addition is.</p></div>
+        <div><h4>FUNCTIONALITY</h4><p>How well the working prototype performs.</p></div>
+        <div><h4>USE CASE</h4><p>How meaningful the feature and your addition are in a real-world scenario.</p></div>
+      </div>
+    </section>
+
+    <section className="unlocked-guide__section" aria-labelledby="domains-title">
+      <p className="eyebrow">05 / CHOOSE YOUR DIRECTION</p>
+      <h3 id="domains-title">Domains</h3>
+      <p>Choose any application that falls within a Domain. You are not assigned a specific application; your choice must satisfy the non-open-source rule.</p>
+      {domains.length ? <ul className="unlocked-guide__domains">{domains.map(domain => <li key={domain.id}><h4>{domain.name}</h4>{domain.description && <p>{domain.description}</p>}</li>)}</ul>
+        : <p className="unlocked-guide__pending" role="status">Domains will appear here.</p>}
+    </section>
+
+    <section className="unlocked-guide__section unlocked-guide__finish" aria-labelledby="submission-finish-title">
+      <p className="eyebrow">06 / FINAL STEP</p>
+      <h3 id="submission-finish-title">Select → Build → Submit</h3>
+      <p>Select a Domain and an eligible application. Recreate one feature, add your improvement, then prepare and submit your PPT through the final form before the deadline.</p>
+      {!submissionOpen && <p className="unlocked-guide__pending">{scheduleWindow === 'upcoming' ? 'The final PPT submission window has not opened yet.' : 'PPT submissions have ended. Your unlocked guide remains available for reference.'}</p>}
+      <SubmissionAction />
+    </section>
+  </div>;
 }

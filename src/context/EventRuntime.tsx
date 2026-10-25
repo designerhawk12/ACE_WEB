@@ -1,5 +1,5 @@
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
-import { eventConfig, type EventPhase, type ProblemStatement, type PuzzleContent } from '../config/event';
+import { createContext, useCallback, useContext, useState, type ReactNode } from 'react';
+import { eventConfig, type EventPhase, type PuzzleContent } from '../config/event';
 import { enigmaProtocol } from '../config/enigmaProtocol';
 import { canSolveAt, getPhaseForWindow } from '../config/schedule';
 import { useScheduleWindow } from '../hooks/useEventClock';
@@ -13,7 +13,6 @@ type EventRuntime = {
   accessGranted: boolean;
   challengeOpen: boolean;
   puzzle: PuzzleContent | null;
-  statement: ProblemStatement | null;
   markSolved: () => void;
   reset: () => void;
 };
@@ -25,16 +24,6 @@ export function EventProvider({ children }: { children: ReactNode }) {
   const [solved, setSolved] = useState(() => {
     try { return sessionStorage.getItem(SESSION_KEY) === SESSION_REVISION; } catch { return false; }
   });
-  const [previewStatement, setPreviewStatement] = useState<ProblemStatement | null>(null);
-  useEffect(() => {
-    let cancelled = false;
-    if (import.meta.env.DEV && isDevPreview) {
-      void import('../config/puzzlePreview').then(module => {
-        if (!cancelled) setPreviewStatement(module.previewStatement);
-      });
-    }
-    return () => { cancelled = true; };
-  }, [isDevPreview]);
   const markSolved = useCallback(() => {
     if (!canSolveAt(Date.now(), isDevPreview)) return;
     setSolved(true);
@@ -50,7 +39,6 @@ export function EventProvider({ children }: { children: ReactNode }) {
   return <EventContext.Provider value={{
     phase, isDevPreview, accessGranted: puzzleActive && solved, challengeOpen,
     puzzle: puzzleActive ? eventConfig.puzzle ?? enigmaProtocol : null,
-    statement: puzzleActive ? isDevPreview ? previewStatement : eventConfig.problemStatement : null,
     markSolved, reset,
   }}>{children}</EventContext.Provider>;
 }

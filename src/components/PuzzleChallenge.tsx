@@ -21,7 +21,8 @@ export function PuzzleChallenge({ content, feedback, attempts, locked, inputRef,
     <header className="puzzle-challenge__heading">
       <p className="eyebrow">DECODING CHALLENGE</p>
       <h2 id="challenge-title">ENIGMA<br />PROTOCOL</h2>
-      <p className="puzzle-challenge__message">ONE MESSAGE. ONE MACHINE. ONE CONFIGURATION.</p>
+      <p className="puzzle-challenge__message">SOLVE THIS PUZZLE TO UNLOCK THE DOMAINS.</p>
+      <blockquote className="puzzle-challenge__quote">“Sometimes it is the people no one can imagine anything of who do the things no one can imagine.”<cite>— The Imitation Game</cite></blockquote>
     </header>
     <div className="puzzle-challenge__workspace">
       <div className="puzzle-cipher" aria-label="Encrypted message">

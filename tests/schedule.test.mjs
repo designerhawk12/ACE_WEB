@@ -64,3 +64,28 @@ test('timeline countdowns use total hours, switch labels, and never go negative'
   }
   assert.deepEqual(getCountdown('registration', end), { label: 'REGISTRATIONS ENDED', value: null });
 });
+
+test('six exact boundary instants keep every public gate in sync', () => {
+  const cases = [
+    { label: 'one second before release', now: start - 1000, phase: 'teaser', solvedPhase: 'teaser', countdown: 'STARTS IN', register: true, solve: false, submit: false },
+    { label: 'at release', now: start, phase: 'puzzle', solvedPhase: 'problem-unlocked', countdown: 'ENDS IN', register: true, solve: true, submit: true },
+    { label: 'one second after release', now: start + 1000, phase: 'puzzle', solvedPhase: 'problem-unlocked', countdown: 'ENDS IN', register: true, solve: true, submit: true },
+    { label: 'one second before deadline', now: end - 1000, phase: 'puzzle', solvedPhase: 'problem-unlocked', countdown: 'ENDS IN', register: true, solve: true, submit: true },
+    { label: 'at deadline', now: end, phase: 'closed', solvedPhase: 'problem-unlocked', countdown: 'ENDED', register: false, solve: false, submit: false },
+    { label: 'one second after deadline', now: end + 1000, phase: 'closed', solvedPhase: 'problem-unlocked', countdown: 'ENDED', register: false, solve: false, submit: false },
+  ];
+  for (const row of cases) {
+    assert.equal(getEffectivePhase(row.now, 'teaser', false, false), row.phase, row.label);
+    assert.equal(getEffectivePhase(row.now, 'teaser', false, true), row.solvedPhase, row.label);
+    assert.equal(getCountdown('challenge', row.now).label, row.countdown, row.label);
+    assert.equal(getCountdown('statements', row.now).label, row.countdown, row.label);
+    assert.equal(getCountdown('submission', row.now).label, row.countdown, row.label);
+    assert.equal(getCountdown('registration', row.now).label, row.register ? 'REGISTRATION CLOSES IN' : 'REGISTRATIONS ENDED', row.label);
+    assert.equal(isRegistrationOpenAt(row.now), row.register, row.label);
+    assert.equal(canSolveAt(row.now, false), row.solve, row.label);
+    assert.equal(isSubmissionOpenAt(row.now), row.submit, row.label);
+    assert.equal(row.submit && row.solvedPhase === 'problem-unlocked', row.submit, `unlocked PPT action: ${row.label}`);
+    if (row.now < start) assert.equal(getCountdown('challenge', row.now).value, row.now === start - 1000 ? '00HR 00MIN 01SEC' : null);
+    if (row.now >= end) assert.equal(getCountdown('submission', row.now).value, null, row.label);
+  }
+});

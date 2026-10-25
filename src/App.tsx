@@ -3,11 +3,12 @@ import { CinematicIntro } from './components/CinematicIntro';
 import { EventPhaseContent } from './components/EventPhaseContent';
 import { EventTimeline } from './components/EventTimeline';
 import { HeroVideo } from './components/HeroVideo';
+import { SubmissionAction } from './components/SubmissionAction';
 import { useTeaserMotion } from './hooks/useTeaserMotion';
 import { useEventRuntime } from './context/EventRuntime';
 import { eventConfig, getPublicEventUrl, phasePresentation } from './config/event';
 import { isRegistrationOpenAt } from './config/schedule';
-import { useRegistrationOpen } from './hooks/useEventClock';
+import { useRegistrationOpen, useSubmissionOpen } from './hooks/useEventClock';
 
 function BrandMark() {
   return (
@@ -49,7 +50,8 @@ function EventAction({ className, href, index, label, state, registration = fals
 }
 
 export default function App() {
-  const { phase } = useEventRuntime();
+  const { phase, accessGranted } = useEventRuntime();
+  const submissionOpen = useSubmissionOpen();
   const [introOpen, setIntroOpen] = useState(true);
   const introDismissedRef = useRef(false);
   const mainRef = useRef<HTMLElement>(null);
@@ -172,6 +174,7 @@ export default function App() {
           <a className="back-to-top" href="#top">BACK TO TOP <span aria-hidden="true">↑</span></a>
         </footer>
       </div>
+      {!introOpen && accessGranted && submissionOpen && <SubmissionAction floating />}
     </>
   );
 }

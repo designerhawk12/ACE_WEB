@@ -9,11 +9,7 @@ export type PuzzleContent = {
   settings: readonly { label: string; value: string }[];
 };
 
-export type ProblemStatement = {
-  title: string;
-  brief: string;
-  rules: readonly string[];
-};
+export type Domain = { id: string; name: string; description?: string };
 
 type EventConfig = {
   eventPhase: EventPhase;
@@ -23,20 +19,22 @@ type EventConfig = {
   /** ISO 8601 date/time with explicit timezone, e.g. a Z or +05:30 suffix. */
   submissionDeadline: string | null;
   puzzle: PuzzleContent | null;
-  problemStatement: ProblemStatement | null;
+  domains: readonly Domain[];
 };
 
 // Browser-delivered configuration is inspectable. Never put answer-bearing secrets here.
 export const eventConfig: EventConfig = {
   eventPhase: 'teaser',
-  // LAUNCH BLOCKER: replace both placeholders with the real public URLs before publishing.
+  // LAUNCH BLOCKER: replace this placeholder with the real initial registration form.
   registrationUrl: 'https://example.com/register',
+  // Verify the invitation in WhatsApp before publishing; syntax alone cannot confirm it is active.
   whatsappUrl: 'https://chat.whatsapp.com/IlVGvqCeiSN7LM8VBNl43n',
-  // Second-stage final submission. Supply its URL separately; never reuse initial registration.
+  // LAUNCH BLOCKER: add the second-stage PPT form separately; never reuse initial registration.
   submissionUrl: null,
   submissionDeadline: eventSchedule.submissionDeadline,
   puzzle: null,
-  problemStatement: null,
+  // Add confirmed event Domains here. Never ship test Domains to participants.
+  domains: [],
 };
 
 export function getPublicEventUrl(value: string | null): string | null {
@@ -52,12 +50,21 @@ export function getPublicEventUrl(value: string | null): string | null {
   }
 }
 
+export function getSubmissionUrl(): string | null {
+  const url = getPublicEventUrl(eventConfig.submissionUrl);
+  const deadline = eventConfig.submissionDeadline;
+  if (!url || url === getPublicEventUrl(eventConfig.registrationUrl) || !deadline || !/T.*(?:Z|[+-]\d{2}:\d{2})$/i.test(deadline) || !Number.isFinite(Date.parse(deadline))) return null;
+  return url;
+}
+
 export const timelineMilestones = [
   { number: '01', name: 'Registration', note: 'Teams are welcome' },
-  { number: '02', name: 'Decoding Challenge', note: 'Decode to access the brief' },
-  { number: '03', name: 'Problem Statements', note: 'Choose your system' },
+  { number: '02', name: 'Decoding Challenge', note: 'Decode to access the Domains' },
+  { number: '03', name: 'Domains', note: 'Choose your system' },
   { number: '04', name: 'PPT Submission', note: 'Show your process' },
   { number: '05', name: 'Shortlisting', note: 'Final review' },
+  { number: '06', name: 'Presentations', note: 'Present your prototype' },
+  { number: '07', name: 'Winner Announcement', note: 'Final result' },
 ] as const;
 
 type PhasePresentation = {
@@ -78,14 +85,14 @@ export const phasePresentation: Record<EventPhase, PhasePresentation> = {
   teaser: {
     headerLabel: 'EVENT / TEASER',
     challenge: {
-      label: 'PROBLEM STATEMENTS',
+      label: 'DOMAINS',
       status: 'PHASE 00 / PREPARING',
       headline: 'COMING SOON',
-      description: 'The brief is being prepared. Get registered and stay close for the unlock.',
-      pendingRegistrationDescription: 'The brief is being prepared. Registration details will follow; stay close for the unlock.',
+      description: 'The Domains are being prepared. Get registered and stay close for the unlock.',
+      pendingRegistrationDescription: 'The Domains are being prepared. Registration details will follow; stay close for the unlock.',
       plateCaption: 'OBJECTIVE / AWAITING RELEASE',
     },
-    challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the brief' },
+    challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the Domains' },
     currentMilestone: 0,
   },
   puzzle: {
@@ -94,22 +101,22 @@ export const phasePresentation: Record<EventPhase, PhasePresentation> = {
       label: 'DECODING CHALLENGE',
       status: 'PHASE 01 / LIVE',
       headline: 'ENIGMA PROTOCOL',
-      description: 'A decoding challenge stands between you and the brief.',
+      description: 'Solve the decoding challenge to unlock the Domains.',
       plateCaption: 'OBJECTIVE / DECODE',
     },
-    challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the brief' },
+    challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the Domains' },
     currentMilestone: 1,
   },
   'problem-unlocked': {
-    headerLabel: 'EVENT / BRIEF UNLOCKED',
+    headerLabel: 'EVENT / DOMAINS UNLOCKED',
     challenge: {
-      label: 'PROBLEM STATEMENTS',
+      label: 'DOMAINS',
       status: 'PHASE 02 / UNLOCKED',
       headline: 'ACCESS GRANTED',
-      description: 'The brief becomes available after the decoding challenge is solved.',
+      description: 'The Domains become available after the decoding challenge is solved.',
       plateCaption: 'OBJECTIVE / UNLOCKED',
     },
-    challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the brief' },
+    challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the Domains' },
     currentMilestone: 2,
   },
   submission: {
@@ -121,7 +128,7 @@ export const phasePresentation: Record<EventPhase, PhasePresentation> = {
       description: 'Package your process, evidence, and findings for review.',
       plateCaption: 'OBJECTIVE / SUBMIT',
     },
-    challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the brief' },
+    challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the Domains' },
     currentMilestone: 3,
   },
   closed: {
@@ -133,7 +140,7 @@ export const phasePresentation: Record<EventPhase, PhasePresentation> = {
       description: 'The decoding window has closed. New answers are no longer accepted.',
       plateCaption: 'OBJECTIVE / COMPLETE',
     },
-    challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the brief' },
+    challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the Domains' },
     currentMilestone: null,
   },
 };
