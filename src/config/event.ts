@@ -1,3 +1,5 @@
+import { eventSchedule } from './schedule';
+
 export const eventPhases = ['teaser', 'puzzle', 'problem-unlocked', 'submission', 'closed'] as const;
 export type EventPhase = (typeof eventPhases)[number];
 export type PuzzleContent = {
@@ -29,10 +31,10 @@ export const eventConfig: EventConfig = {
   eventPhase: 'teaser',
   // LAUNCH BLOCKER: replace both placeholders with the real public URLs before publishing.
   registrationUrl: 'https://example.com/register',
-  whatsappUrl: 'https://chat.whatsapp.com/placeholder',
-  // Second-stage final submission. Supply separately; never reuse initial registration.
+  whatsappUrl: 'https://chat.whatsapp.com/IlVGvqCeiSN7LM8VBNl43n',
+  // Second-stage final submission. Supply its URL separately; never reuse initial registration.
   submissionUrl: null,
-  submissionDeadline: null,
+  submissionDeadline: eventSchedule.submissionDeadline,
   puzzle: null,
   problemStatement: null,
 };
@@ -51,7 +53,7 @@ export function getPublicEventUrl(value: string | null): string | null {
 }
 
 export const timelineMilestones = [
-  { number: '01', name: 'Registration Open', note: 'Teams are welcome' },
+  { number: '01', name: 'Registration', note: 'Teams are welcome' },
   { number: '02', name: 'Decoding Challenge', note: 'Decode to access the brief' },
   { number: '03', name: 'Problem Statements', note: 'Choose your system' },
   { number: '04', name: 'PPT Submission', note: 'Show your process' },
@@ -68,7 +70,6 @@ type PhasePresentation = {
     pendingRegistrationDescription?: string;
     plateCaption: string;
   };
-  timelineStates: readonly [string, string, string, string, string];
   challengeMilestone: { name: string; note: string };
   currentMilestone: number | null;
 };
@@ -84,7 +85,6 @@ export const phasePresentation: Record<EventPhase, PhasePresentation> = {
       pendingRegistrationDescription: 'The brief is being prepared. Registration details will follow; stay close for the unlock.',
       plateCaption: 'OBJECTIVE / AWAITING RELEASE',
     },
-    timelineStates: ['OPEN', 'UP NEXT', 'SOON', 'PENDING', 'PENDING'],
     challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the brief' },
     currentMilestone: 0,
   },
@@ -97,7 +97,6 @@ export const phasePresentation: Record<EventPhase, PhasePresentation> = {
       description: 'A decoding challenge stands between you and the brief.',
       plateCaption: 'OBJECTIVE / DECODE',
     },
-    timelineStates: ['OPEN', 'LIVE', 'LOCKED', 'PENDING', 'PENDING'],
     challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the brief' },
     currentMilestone: 1,
   },
@@ -110,7 +109,6 @@ export const phasePresentation: Record<EventPhase, PhasePresentation> = {
       description: 'The brief becomes available after the decoding challenge is solved.',
       plateCaption: 'OBJECTIVE / UNLOCKED',
     },
-    timelineStates: ['OPEN', 'COMPLETE', 'OPEN', 'UP NEXT', 'PENDING'],
     challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the brief' },
     currentMilestone: 2,
   },
@@ -123,20 +121,18 @@ export const phasePresentation: Record<EventPhase, PhasePresentation> = {
       description: 'Package your process, evidence, and findings for review.',
       plateCaption: 'OBJECTIVE / SUBMIT',
     },
-    timelineStates: ['CLOSED', 'COMPLETE', 'COMPLETE', 'OPEN', 'UP NEXT'],
     challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the brief' },
     currentMilestone: 3,
   },
   closed: {
     headerLabel: 'EVENT / CLOSED',
     challenge: {
-      label: 'EVENT STATUS',
+      label: 'DECODING CHALLENGE',
       status: 'ARCHIVE / CLOSED',
-      headline: 'THIS RUN IS COMPLETE',
-      description: 'The challenge has concluded. Keep pulling at the threads.',
+      headline: 'CHALLENGE ENDED',
+      description: 'The decoding window has closed. New answers are no longer accepted.',
       plateCaption: 'OBJECTIVE / COMPLETE',
     },
-    timelineStates: ['CLOSED', 'COMPLETE', 'COMPLETE', 'CLOSED', 'COMPLETE'],
     challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the brief' },
     currentMilestone: null,
   },

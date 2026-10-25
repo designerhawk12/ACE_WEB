@@ -147,6 +147,14 @@ button { font: inherit; }
 .challenge__kicker { margin: 0 0 1rem; color: var(--red); }
 .challenge__heading h2 { max-width: 10ch; margin: 0; font-size: clamp(2.8rem, 8.5vw, 7.1rem); font-weight: 670; line-height: .94; letter-spacing: -.075em; }
 .challenge__description { max-width: 30rem; margin: 1.4rem 0 0; color: var(--paper-muted); font-size: .95rem; line-height: 1.7; }
+.challenge__countdown { display: flex; min-width: 0; min-height: 17.5rem; flex-direction: column; justify-content: center; align-items: flex-end; gap: 1.5rem; padding-block: 1.5rem; border-block: 1px solid var(--line); text-align: right; }
+.challenge__countdown > .eyebrow { margin: 0; color: var(--paper-muted); }
+.challenge__countdown-readout { display: flex; min-width: 0; flex-direction: column; align-items: flex-end; gap: .6rem; }
+.challenge__countdown-readout .schedule-readout__label { color: var(--paper); font: 500 .83rem/1.3 var(--mono); letter-spacing: .12em; }
+.challenge__countdown-readout .schedule-readout__value { color: var(--red); font: 600 clamp(1.22rem, 3.3vw, 2.4rem)/1.2 var(--mono); letter-spacing: -.055em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.challenge__countdown-footer { color: var(--steel); font: 500 .64rem/1.4 var(--mono); letter-spacing: .05em; }
+.challenge--closed { animation: scheduled-entrance .35s ease-out both; }
+@keyframes scheduled-entrance { from { opacity: 0; } to { opacity: 1; } }
 .challenge__plate { position: relative; display: flex; min-height: 17.5rem; flex-direction: column; justify-content: space-between; padding: 1.1rem; overflow: hidden; border: 1px solid rgba(233, 229, 220, .2); background: radial-gradient(ellipse at center, rgba(233,229,220,.045), transparent 63%), repeating-linear-gradient(0deg, transparent, transparent 33px, rgba(233,229,220,.035) 34px), var(--ink-raised); }
 .challenge__plate::before { position: absolute; inset: 0; content: ""; opacity: .3; background-image: linear-gradient(90deg, transparent calc(50% - .5px), var(--line) 50%, transparent calc(50% + .5px)), linear-gradient(transparent calc(50% - .5px), var(--line) 50%, transparent calc(50% + .5px)); pointer-events: none; }
 .challenge__plate-top, .challenge__plate-bottom { position: relative; display: flex; align-items: center; justify-content: space-between; color: var(--steel); font: 500 .49rem/1.5 var(--mono); letter-spacing: .1em; }
@@ -203,6 +211,10 @@ button { font: inherit; }
 .timeline__copy p { margin: .35rem 0 0; color: var(--steel); font: 500 .56rem/1.4 var(--mono); }
 .timeline__state { color: var(--steel); font: 500 .49rem/1.4 var(--mono); letter-spacing: .08em; text-align: right; white-space: nowrap; }
 .timeline__item.is-current .timeline__state { color: var(--red); }
+.timeline__state { display: flex; min-width: 0; flex-direction: column; align-items: flex-end; gap: .2rem; font-size: .62rem; font-variant-numeric: tabular-nums; }
+.timeline__state .schedule-readout__label { color: var(--steel); }
+.timeline__state .schedule-readout__value { color: var(--paper-muted); font: 500 .75rem/1.3 var(--mono); letter-spacing: 0; }
+.timeline__item.is-current .timeline__state .schedule-readout__value { color: var(--red); }
 
 .site-footer { display: grid; grid-template-columns: 1fr; gap: 2rem; padding-block: 2.4rem 2rem; border-top: 1px solid var(--line); }
 .site-footer__brand p { margin: .9rem 0 0; color: var(--steel); font: italic .85rem/1.3 var(--display); }
@@ -332,6 +344,9 @@ button { font: inherit; }
 .participate .action-card__label { font-size: clamp(1.3rem, 3vw, 2.6rem); letter-spacing: -.035em; }
 .action-card:focus-visible .arrow-icon { transform: translate(2px, -2px); }
 .puzzle-stage { position: relative; }
+.puzzle-stage__header { display: flex; flex-wrap: wrap; align-items: start; justify-content: space-between; gap: 1rem; }
+.puzzle-stage__timer { display: flex; flex-direction: column; align-items: flex-end; gap: .4rem; color: var(--steel); font: 500 .65rem/1.4 var(--mono); letter-spacing: .08em; text-align: right; }
+.puzzle-stage__timer .schedule-readout__value { color: var(--red); font-size: .95rem; letter-spacing: 0; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .puzzle-challenge { display: grid; gap: 2rem; margin-top: 2.5rem; }
 .puzzle-challenge__heading h2, .puzzle-success h2 { margin: 1rem 0; font-size: clamp(2.8rem, 7vw, 6.2rem); font-weight: 650; line-height: .98; letter-spacing: -.065em; overflow-wrap: anywhere; }
 .puzzle-challenge__message, .puzzle-stage__pending { max-width: 29rem; color: var(--paper-muted); font-size: 1rem; line-height: 1.7; }
@@ -366,6 +381,7 @@ button { font: inherit; }
 .submission-next li + li { margin-top: .6rem; }
 .submission-next__deadline { display: flex; flex-direction: column; gap: .6rem; margin-block: 2rem 1.5rem; }
 .submission-next__deadline > :last-child { color: var(--paper); font-size: 1.1rem; line-height: 1.5; }
+.submission-next__ended { color: var(--red) !important; font: 600 .85rem/1.5 var(--mono) !important; letter-spacing: .08em; }
 .submission-action { display: flex; width: 100%; max-width: 48rem; min-height: 3.5rem; justify-content: space-between; align-items: center; gap: 1rem; padding: 1rem 0; border: 0; border-block: 1px solid var(--line); background: transparent; color: var(--paper); font: 600 1rem/1.4 var(--mono); text-align: left; }
 .submission-action > :last-child { color: var(--red); transition: transform .18s ease; }
 .submission-action:hover > :last-child, .submission-action:focus-visible > :last-child { transform: translate(2px, -2px); }
@@ -396,6 +412,19 @@ button { font: inherit; }
   .hero-media { width: min(100%, 640px); justify-self: center; }
   .hero__closing { flex-direction: row; }
   .challenge__layout { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 699px) {
+  .timeline__item { grid-template-columns: 1.9rem minmax(0, 1fr); gap: .3rem .65rem; padding-block: .85rem; }
+  .timeline__number { grid-column: 1; grid-row: 1 / span 2; }
+  .timeline__copy { grid-column: 2; grid-row: 1; }
+  .timeline__state { grid-column: 2; grid-row: 2; justify-self: end; font-size: .62rem; }
+  .timeline__state .schedule-readout__value { font-size: .75rem; }
+  .challenge__countdown { min-height: 11rem; align-items: flex-start; gap: 1.1rem; text-align: left; }
+  .challenge__countdown-readout { align-items: flex-start; }
+  .puzzle-stage__timer { margin-left: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .challenge--closed { animation: none; }
 }
 @media (min-width: 1100px) {
   .hero { grid-template-columns: minmax(0, 56fr) minmax(0, 44fr); grid-template-areas: 'metadata media' 'title media' 'closing media' 'scroll media'; gap: 1.6rem 1rem; min-height: min(850px, calc(100svh - 5.8rem)); }

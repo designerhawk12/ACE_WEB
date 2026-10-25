@@ -6,6 +6,8 @@ import { HeroVideo } from './components/HeroVideo';
 import { useTeaserMotion } from './hooks/useTeaserMotion';
 import { useEventRuntime } from './context/EventRuntime';
 import { eventConfig, getPublicEventUrl, phasePresentation } from './config/event';
+import { isRegistrationOpenAt } from './config/schedule';
+import { useRegistrationOpen } from './hooks/useEventClock';
 
 function BrandMark() {
   return (
@@ -26,21 +28,24 @@ type EventActionProps = {
   index: string;
   label: string;
   state: string;
+  registration?: boolean;
 };
 
-function EventAction({ className, href, index, label, state }: EventActionProps) {
-  const publicUrl = getPublicEventUrl(href);
+function EventAction({ className, href, index, label, state, registration = false }: EventActionProps) {
+  const registrationOpen = useRegistrationOpen();
+  const closed = registration && !registrationOpen;
+  const publicUrl = closed ? null : getPublicEventUrl(href);
   const content = <>
-    <span className="action-card__index">{index} / {publicUrl ? state : 'LINK PENDING'}</span>
+    <span className="action-card__index">{index} / {closed ? 'REGISTRATIONS ENDED' : publicUrl ? state : 'LINK PENDING'}</span>
     <span className="action-card__label">{label}</span>
     <ArrowIcon />
   </>;
 
   if (!publicUrl) {
-    return <button aria-label={`${label} — link pending`} className={`action-card ${className} action-card--pending`} disabled title="Link pending; check back soon" type="button">{content}</button>;
+    return <button aria-label={`${label} — ${closed ? 'registrations ended' : 'link pending'}`} className={`action-card ${className} action-card--pending`} disabled title={closed ? 'Registrations ended' : 'Link pending; check back soon'} type="button">{content}</button>;
   }
 
-  return <a className={`action-card ${className}`} href={publicUrl} rel="noopener noreferrer" target="_blank">{content}</a>;
+  return <a className={`action-card ${className}`} href={publicUrl} onClick={registration ? event => { if (!isRegistrationOpenAt(Date.now())) event.preventDefault(); } : undefined} rel="noopener noreferrer" target="_blank">{content}</a>;
 }
 
 export default function App() {
@@ -149,7 +154,7 @@ export default function App() {
             <div className="section-index"><span className="index-number">05</span><span className="index-line" aria-hidden="true" /><span className="eyebrow">PARTICIPATE</span></div>
             <h2 className="participate__heading" id="participate-title">Take the next step.</h2>
             <div className="action-band">
-              <EventAction className="action-card--register" href={eventConfig.registrationUrl} index="01 / REGISTER" label="Register for Event" state="OPEN" />
+              <EventAction className="action-card--register" href={eventConfig.registrationUrl} index="01 / REGISTER" label="Register for Event" state="OPEN" registration />
               <EventAction className="action-card--whatsapp" href={eventConfig.whatsappUrl} index="02 / CONNECT" label="Join WhatsApp Group" state="CONNECT" />
             </div>
           </section>

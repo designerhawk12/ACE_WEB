@@ -1,8 +1,12 @@
 import { eventConfig, getPublicEventUrl, phasePresentation, timelineMilestones, type EventPhase } from '../config/event';
+import { ScheduleReadout } from './ScheduleReadout';
+import { useRegistrationOpen } from '../hooks/useEventClock';
 
 export function EventTimeline({ phase }: { phase: EventPhase }) {
-  const { timelineStates, challengeMilestone, currentMilestone } = phasePresentation[phase];
+  const { challengeMilestone, currentMilestone } = phasePresentation[phase];
   const registrationPending = !getPublicEventUrl(eventConfig.registrationUrl);
+  const registrationOpen = useRegistrationOpen();
+  const registrationNote = !registrationOpen ? 'Registration closed' : registrationPending ? 'Link to follow' : timelineMilestones[0].note;
 
   return (
     <section className="timeline section-rule" id="timeline" aria-labelledby="timeline-title">
@@ -19,18 +23,19 @@ export function EventTimeline({ phase }: { phase: EventPhase }) {
       <ol className="timeline__list">
         <li className="timeline__progress" aria-hidden="true" />
         {timelineMilestones.map((item, index) => {
-          const pendingRegistration = index === 0 && registrationPending;
-          const name = pendingRegistration ? 'Registration Pending' : index === 1 ? challengeMilestone.name : item.name;
-          const note = pendingRegistration ? 'Link to follow' : index === 1 ? challengeMilestone.note : item.note;
+          const name = index === 1 ? challengeMilestone.name : item.name;
+          const note = index === 0 ? registrationNote : index === 1 ? challengeMilestone.note : item.note;
 
           return (
-            <li className={`timeline__item${currentMilestone === index && !pendingRegistration ? ' is-current' : ''}`} key={item.number}>
+            <li className={`timeline__item${currentMilestone === index && !(index === 0 && registrationPending) ? ' is-current' : ''}`} key={item.number}>
               <span className="timeline__number">{item.number}</span>
               <div className="timeline__copy">
                 <h3>{name}</h3>
                 <p>{note}</p>
               </div>
-              <span className="timeline__state">{pendingRegistration ? 'PENDING' : timelineStates[index]}</span>
+              {index < 4
+                ? <ScheduleReadout className="timeline__state" kind={(['registration', 'challenge', 'statements', 'submission'] as const)[index]} />
+                : <span className="timeline__state">PENDING</span>}
             </li>
           );
         })}

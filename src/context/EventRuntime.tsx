@@ -1,6 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 import { eventConfig, type EventPhase, type ProblemStatement, type PuzzleContent } from '../config/event';
 import { enigmaProtocol } from '../config/enigmaProtocol';
+import { canSolveAt, getPhaseForWindow } from '../config/schedule';
+import { useScheduleWindow } from '../hooks/useEventClock';
 
 const SESSION_KEY = 'ace-puzzle-unlocked';
 // Old protocol solutions must not unlock this revised reconstruction.
@@ -9,6 +11,7 @@ type EventRuntime = {
   phase: EventPhase;
   isDevPreview: boolean;
   accessGranted: boolean;
+  challengeOpen: boolean;
   puzzle: PuzzleContent | null;
   statement: ProblemStatement | null;
   markSolved: () => void;
@@ -18,10 +21,8 @@ const EventContext = createContext<EventRuntime | null>(null);
 
 export function EventProvider({ children }: { children: ReactNode }) {
   const [isDevPreview] = useState(() => import.meta.env.DEV && new URLSearchParams(window.location.search).get('preview') === 'puzzle');
-  const configuredPhase = isDevPreview ? 'puzzle' : eventConfig.eventPhase;
-  const puzzleActive = configuredPhase === 'puzzle' || configuredPhase === 'problem-unlocked';
-  const [accessGranted, setAccessGranted] = useState(() => {
-    if (!puzzleActive) return false;
+  const scheduleWindow = useScheduleWindow();
+  const [solved, setSolved] = useState(() => {
     try { return sessionStorage.getItem(SESSION_KEY) === SESSION_REVISION; } catch { return false; }
   });
   const [previewStatement, setPreviewStatement] = useState<ProblemStatement | null>(null);
@@ -35,16 +36,19 @@ export function EventProvider({ children }: { children: ReactNode }) {
     return () => { cancelled = true; };
   }, [isDevPreview]);
   const markSolved = useCallback(() => {
-    setAccessGranted(true);
+    if (!canSolveAt(Date.now(), isDevPreview)) return;
+    setSolved(true);
     try { sessionStorage.setItem(SESSION_KEY, SESSION_REVISION); } catch { /* In-memory unlock still works. */ }
-  }, []);
+  }, [isDevPreview]);
   const reset = useCallback(() => {
-    setAccessGranted(false);
+    setSolved(false);
     try { sessionStorage.removeItem(SESSION_KEY); } catch { /* Storage can be unavailable. */ }
   }, []);
-  const phase = puzzleActive && accessGranted ? 'problem-unlocked' : configuredPhase;
+  const phase = getPhaseForWindow(scheduleWindow, eventConfig.eventPhase, isDevPreview, solved);
+  const puzzleActive = phase === 'puzzle' || phase === 'problem-unlocked';
+  const challengeOpen = scheduleWindow === 'live' || (scheduleWindow === 'upcoming' && isDevPreview);
   return <EventContext.Provider value={{
-    phase, isDevPreview, accessGranted: puzzleActive && accessGranted,
+    phase, isDevPreview, accessGranted: puzzleActive && solved, challengeOpen,
     puzzle: puzzleActive ? eventConfig.puzzle ?? enigmaProtocol : null,
     statement: puzzleActive ? isDevPreview ? previewStatement : eventConfig.problemStatement : null,
     markSolved, reset,
