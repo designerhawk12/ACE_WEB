@@ -1,5 +1,4 @@
 import { eventConfig, getPublicEventUrl, phasePresentation, timelineMilestones, type EventPhase } from '../config/event';
-import { EventClue } from './EventClue';
 
 export function EventTimeline({ phase }: { phase: EventPhase }) {
   const { timelineStates, challengeMilestone, currentMilestone } = phasePresentation[phase];
@@ -15,7 +14,6 @@ export function EventTimeline({ phase }: { phase: EventPhase }) {
         </div>
         <h2 id="timeline-title">A process,<br /><em>in five parts.</em></h2>
         <p>The order of operations. The next marker appears when it is time.</p>
-        <EventClue slot="sequence" />
       </div>
 
       <ol className="timeline__list">

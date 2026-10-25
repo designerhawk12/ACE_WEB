@@ -1,6 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
 import { CinematicIntro } from './components/CinematicIntro';
-import { EventClue } from './components/EventClue';
 import { EventPhaseContent } from './components/EventPhaseContent';
 import { EventTimeline } from './components/EventTimeline';
 import { HeroVideo } from './components/HeroVideo';
@@ -80,7 +79,6 @@ export default function App() {
             <a href="#timeline">SEQUENCE</a>
           </nav>
           <span className="header-status"><i aria-hidden="true" /> {phasePresentation[phase].headerLabel}</span>
-          <EventClue slot="header" />
         </header>
 
         <main id="main-content" ref={mainRef} tabIndex={-1}>
@@ -91,7 +89,6 @@ export default function App() {
                 <span className="eyebrow">ACE PRESENTS</span>
                 <span className="hero__rule" aria-hidden="true" />
                 <span className="eyebrow">RESEARCH / 001</span>
-                <EventClue slot="hero" />
               </div>
               <h1 className="hero__title" id="hero-title">
                 <span className="hero__title-serif">Reverse</span>
@@ -119,7 +116,6 @@ export default function App() {
               <div className="about__description">
                 <p>Reverse engineering starts with what you can observe. Work backward through a system, object, or process to understand the decisions and mechanisms inside it.</p>
                 <p>In this challenge, curiosity is your tool kit. Investigate, form a theory, test it against evidence, then make your reasoning clear.</p>
-                <EventClue slot="about" />
                 <a className="inline-link" href="#challenge">EXPLORE THE CHALLENGE <span aria-hidden="true">↓</span></a>
               </div>
             </div>
@@ -156,7 +152,6 @@ export default function App() {
               <EventAction className="action-card--register" href={eventConfig.registrationUrl} index="01 / REGISTER" label="Register for Event" state="OPEN" />
               <EventAction className="action-card--whatsapp" href={eventConfig.whatsappUrl} index="02 / CONNECT" label="Join WhatsApp Group" state="CONNECT" />
             </div>
-            <EventClue slot="actions" />
           </section>
         </main>
 
@@ -168,7 +163,6 @@ export default function App() {
           <div className="site-footer__detail">
             <span>ACE CLUB / REVERSE ENGINEERING</span>
             <span>THE DETAILS ARE IN THE DISASSEMBLY.</span>
-            <EventClue slot="footer" />
           </div>
           <a className="back-to-top" href="#top">BACK TO TOP <span aria-hidden="true">↑</span></a>
         </footer>

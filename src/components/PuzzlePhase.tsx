@@ -3,11 +3,10 @@ import { motion, useReducedMotion } from 'motion/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { PuzzleContent } from '../config/event';
 import { useEventRuntime } from '../context/EventRuntime';
-import { rejectionMessages, verifyAnswer } from '../lib/puzzleVerifier';
+import { rejectionMessage, verifyAnswer } from '../lib/puzzleVerifier';
 import { ProblemStatementReveal } from './ProblemStatementReveal';
 import { PuzzleChallenge } from './PuzzleChallenge';
 import { PuzzleSuccess } from './PuzzleSuccess';
-import { EventClue } from './EventClue';
 import { SubmissionNextSteps } from './SubmissionNextSteps';
 
 export default function PuzzlePhase({ puzzle }: { puzzle: PuzzleContent }) {
@@ -43,7 +42,7 @@ export default function PuzzlePhase({ puzzle }: { puzzle: PuzzleContent }) {
         setStatus('accepted');
         setFeedback('RECONSTRUCTION VERIFIED. Confirming access.');
       } else {
-        setFeedback(rejectionMessages[Math.min(attempts, rejectionMessages.length - 1)]);
+        setFeedback(rejectionMessage);
         setAttempts(count => count + 1);
         setStatus('idle');
         busy.current = false;
@@ -70,7 +69,6 @@ export default function PuzzlePhase({ puzzle }: { puzzle: PuzzleContent }) {
       <SubmissionNextSteps />
     </> : <PuzzleChallenge content={puzzle} onSubmitAnswer={submit} feedback={feedback} attempts={attempts} locked={status !== 'idle'} inputRef={inputRef} />}
     {status === 'accepted' && !accessGranted && <motion.div className="puzzle-confirmation" aria-hidden="true" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: reduced ? 0 : 0.65, ease: 'easeInOut' }} onAnimationComplete={markSolved} />}
-    <div className="puzzle-stage__annotation"><EventClue slot="challenge" /></div>
     {import.meta.env.DEV && isDevPreview && <button className="puzzle-reset" type="button" onClick={resetPuzzle}>DEV PREVIEW / RESET PUZZLE</button>}
   </section>;
 }

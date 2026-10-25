@@ -1,5 +1,4 @@
 import { eventConfig, getPublicEventUrl, phasePresentation, type EventPhase } from '../config/event';
-import { EventClue } from './EventClue';
 
 type ChallengeStatusProps = {
   phase: EventPhase;
@@ -24,7 +23,6 @@ export function ChallengeStatus({ phase }: ChallengeStatusProps) {
         <div className="challenge__heading">
           <p className="eyebrow challenge__kicker">{content.label}</p>
           <h2 id="challenge-title"><span className="challenge__headline">{content.headline}</span></h2>
-          <EventClue slot="challenge" />
           <p className="challenge__description">{description}</p>
         </div>
 

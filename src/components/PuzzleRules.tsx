@@ -1,19 +1,21 @@
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import type { PuzzleContent } from '../config/event';
 
 type PuzzleRulesProps = {
-  rules: readonly string[];
+  content: PuzzleContent;
 };
 
-export function PuzzleRules({ rules }: PuzzleRulesProps) {
+export function PuzzleRules({ content }: PuzzleRulesProps) {
   return (
-    <details className="puzzle-rules" onToggle={() => ScrollTrigger.refresh()}>
+    <details className="puzzle-rules" open onToggle={() => ScrollTrigger.refresh()}>
       <summary>PROTOCOL / RULES <span aria-hidden="true">+</span></summary>
-      <ol>
-        {rules.map((rule, index) => <li key={`${index}-${rule}`}>{rule.split(/(起点|終点|二・三)/g).map((part, partIndex) => /^(起点|終点|二・三)$/.test(part) ? <span key={partIndex} lang="ja">{part}</span> : part)}</li>)}
-      </ol>
-      <dl className="puzzle-rules__numerals" aria-label="Japanese numeral key">
-        {[['一', '1'], ['二', '2'], ['三', '3'], ['四', '4']].map(([symbol, numeral]) => <div key={symbol}><dt lang="ja">{symbol}</dt><dd>= {numeral}</dd></div>)}
-      </dl>
+      <div className="puzzle-rules__content" lang="ja">
+        <h3>{content.protocolTitle}</h3>
+        <p>{content.instructions}</p>
+        <dl className="puzzle-rules__settings">
+          {content.settings.map(setting => <div key={setting.label}><dt>{setting.label}：</dt><dd>{setting.value}</dd></div>)}
+        </dl>
+      </div>
     </details>
   );
 }

@@ -1,10 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 import { eventConfig, type EventPhase, type ProblemStatement, type PuzzleContent } from '../config/event';
-import { turingProtocol } from '../config/turingProtocol';
+import { enigmaProtocol } from '../config/enigmaProtocol';
 
 const SESSION_KEY = 'ace-puzzle-unlocked';
 // Old protocol solutions must not unlock this revised reconstruction.
-const SESSION_REVISION = 'turing-protocol-002';
+const SESSION_REVISION = 'enigma-protocol-001';
 type EventRuntime = {
   phase: EventPhase;
   isDevPreview: boolean;
@@ -45,7 +45,7 @@ export function EventProvider({ children }: { children: ReactNode }) {
   const phase = puzzleActive && accessGranted ? 'problem-unlocked' : configuredPhase;
   return <EventContext.Provider value={{
     phase, isDevPreview, accessGranted: puzzleActive && accessGranted,
-    puzzle: puzzleActive ? eventConfig.puzzle ?? turingProtocol : null,
+    puzzle: puzzleActive ? eventConfig.puzzle ?? enigmaProtocol : null,
     statement: puzzleActive ? isDevPreview ? previewStatement : eventConfig.problemStatement : null,
     markSolved, reset,
   }}>{children}</EventContext.Provider>;

@@ -1,80 +1,27 @@
-# Turing Protocol: testing and release
+# Enigma Protocol: testing and release
 
-Public configuration remains `eventPhase: 'teaser'` in `src/config/event.ts`.
-Normal development and production URLs show the teaser. There is no timed activation.
+The public configuration remains `eventPhase: 'teaser'` in `src/config/event.ts`. There is no timed activation. The normal local URL and every production URL show the teaser.
 
-## Local test
+## Local preview
 
-Start Vite (`pnpm dev`) and open `http://localhost:3000/?preview=puzzle`.
-The override is guarded by `import.meta.env.DEV`; production builds ignore it.
-The original intro runs; Skip or Escape makes testing quicker.
+Start Vite and open `http://localhost:3000/?preview=puzzle`. The override is guarded by `import.meta.env.DEV` and is ignored in a production build. The original intro runs; Skip Intro or Escape makes testing quicker. The challenge is self-contained: the exact ciphertext, Japanese instructions, and all Enigma settings appear in the challenge section, with rules expanded on arrival. The visitor can use a standard Enigma I/M3 simulator and enter the resulting English phrase.
 
-Automated verifier/reconstruction checks: `node --test tests/puzzle.test.mjs`.
-TypeScript: `pnpm exec tsc -b`. Production: `pnpm build`.
+The displayed settings are rotors I → II → III from left to right, ring A–A–A, starting position A–A–A, reflector B, and no plugboard pairs. The ciphertext is `OPZFQWVSLOM`. `node --test tests/puzzle.test.mjs` independently checks the standard `AAAAA` → `BDZGO` test vector, the displayed settings, and the ciphertext mapping. The puzzle was designed for a 2–5 minute solve, but that duration needs a participant playtest to confirm.
 
-Read the five Japanese margin annotations in page order: hero, sequence,
-understanding, challenge, participate (sections 01–05). The rules disclose the numeral key and the
-row-first coordinate convention. They do not collect the fragments for the player.
-The arrows preserve the written order. The rules hint that page structure matters,
-and to begin at 起点 and finish at 終点, without giving away the numbered order.
-The eleven extracted letters form a phrase; the full reconstruction is not printed in the UI.
+Wrong answers show one consistent error with no lockout. Correct input is trimmed, uppercased, stripped of spaces, and compared with a SHA-256 digest using Web Crypto. Use HTTPS or localhost. This is a client-side interaction gate, not a security boundary; do not rely on it to protect confidential material.
 
-Wrong answers progressively offer five hints, then repeat the final hint without
-lockout. Correct input is trimmed, uppercased, stripped of all whitespace, and compared as a SHA-256 digest
-using Web Crypto. Use HTTPS or localhost. This is a client-side interaction gate,
-not a security boundary: do not ship confidential material expecting a hash to hide it.
-
-The input locks for a restrained confirmation rule, then the status and heading
-change to ACCESS GRANTED. Preview alone loads a clearly marked dummy statement
-from `src/config/puzzlePreview.ts`. That module is excluded from production builds.
-Success persists for the current tab session with sessionStorage key
-`ace-puzzle-unlocked`. The preview's DEV PREVIEW / RESET PUZZLE button clears it.
-The stored value is protocol-versioned so solutions to the previous puzzle do not
-unlock the revised one. Refresh preserves a solution to the current protocol.
-Storage failures retain a working in-memory flow but cannot preserve reload state.
+The input locks for a thin red confirmation rule. ACCESS GRANTED and a brief success line lead into the existing problem statement reveal. A clearly marked dummy statement loads only in the development preview and is excluded from production builds. Success persists for the current tab session with `sessionStorage` key `ace-puzzle-unlocked`. The stored value is versioned, so previous coordinate-puzzle unlocks no longer grant access. The development reset control clears it. If storage fails, the current in-memory unlock still works but will not survive reload.
 
 ## Release
 
-Change only `eventPhase: 'teaser'` to `eventPhase: 'puzzle'` in
-`src/config/event.ts`, then rebuild and redeploy. The built-in protocol is selected
-when the phase is active and `puzzle` is null. No preview query is needed.
+Change `eventPhase: 'teaser'` to `eventPhase: 'puzzle'` in `src/config/event.ts`, then rebuild and redeploy. The built-in Enigma protocol is selected when the phase is active and `puzzle` is null. No preview query is needed.
 
-Before expecting a real brief to appear, populate `eventConfig.problemStatement`
-with `{ title, brief, rules }`. With no real statement, success still works and
-shows a brief-awaiting-release message; the development dummy never substitutes
-for a real public brief. Existing registration/WhatsApp URLs still require real links.
+Populate `eventConfig.problemStatement` with `{ title, brief, rules }` before expecting the real brief to appear. With no real statement, success still works and shows a brief-awaiting-release message. Development dummy content never substitutes for a real public brief. Registration and WhatsApp URLs also require the real links.
 
 ## Second-stage submission
 
-After unlock, a prominent NEXT PROTOCOL section follows the brief. It explains
-that initial event registration is not PPT submission and participants must complete
-a separate final form with participant/team details, selected problem statement,
-and PPT upload. The same section is directly available in the `submission` phase.
-It remains absent in teaser, before puzzle success, and in closed.
+After unlock, a NEXT PROTOCOL section follows the brief. Initial event registration does not submit a PPT. Participants must complete a separate form with participant or team details, selected problem statement, and PPT upload before the deadline. The same section is directly available in the `submission` phase. It is absent in teaser, before puzzle success, and in closed.
 
-Set `eventConfig.submissionUrl` to the real final form URL. This is independent of
-`registrationUrl`; a missing, placeholder, invalid, or duplicated registration URL
-leaves the action disabled. No destination is invented.
+Set `eventConfig.submissionUrl` to the real final form URL, separately from `registrationUrl`. A missing, placeholder, invalid, or duplicated registration URL leaves the action disabled. Set `eventConfig.submissionDeadline` to an ISO 8601 timestamp with an explicit timezone. It displays in IST; null or invalid values show “To be announced”. Both fields remain null until supplied. No destination or deadline is invented, and these fields do not cause timed activation.
 
-Set `eventConfig.submissionDeadline` to an ISO 8601 timestamp with an explicit
-timezone. It displays prominently in IST (Asia/Kolkata). Null or invalid values
-show “To be announced”. This is display-only configuration, not timed activation.
-Both new fields remain null until supplied. Details are collected in the external
-form, not through a new website form.
-
-Preserve the sequence teaser → puzzle → problem-unlocked → submission → closed.
-Solving updates the visitor's local presentation; it does not rewrite global config.
-An existing session unlock never overrides teaser, submission, or closed.
-
-## Difficulty calibration
-
-Intended path: notice the missing information (30–60 seconds), explore annotations
-(2–4 minutes), convert numerals and order coordinates (1–2 minutes), then extract
-letters and submit (30–60 seconds). No external Japanese knowledge is required.
-
-The supplied puzzle supports this journey but does not enforce a duration. The
-phrase is no longer the visible event identity. The grid alone does not specify
-the coordinate order, but neither that
-fact nor client-side hashing prevents guesses or AI assistance. A measured 5–8
-minute median requires a small first-time participant playtest; do not add artificial
-waiting or claim a verified median without that test.
+Preserve the sequence teaser → puzzle → problem-unlocked → submission → closed. Solving updates only the visitor's local presentation and does not rewrite global configuration. An existing session unlock never overrides teaser, submission, or closed.

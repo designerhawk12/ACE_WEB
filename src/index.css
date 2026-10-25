@@ -161,9 +161,6 @@ button { font: inherit; }
 .plate-corner--br { right: -.08rem; bottom: -.08rem; border-width: 0 1px 1px 0; }
 
 /* Dormant until the event config enables the puzzle and supplies its content. */
-.event-clue { color: var(--red); }
-.puzzle-challenge__signal { margin-top: 2rem; padding: 1.5rem; border: 1px solid var(--line); color: var(--paper); font: 600 clamp(1.1rem, 3vw, 1.65rem)/1.65 var(--mono); letter-spacing: .12em; overflow-wrap: anywhere; }
-.puzzle-challenge__signal p { margin: 0; }
 .puzzle-challenge__form { margin-top: 2rem; }
 .puzzle-challenge__input-row { display: flex; gap: .75rem; margin-top: .7rem; }
 .puzzle-challenge__input-row input { min-width: 0; flex: 1; padding: .9rem; border: 1px solid var(--line); border-radius: 0; background: var(--ink-raised); color: var(--paper); font: 500 .9rem/1.3 var(--mono); }
@@ -174,8 +171,8 @@ button { font: inherit; }
 .puzzle-rules summary { display: flex; justify-content: space-between; gap: 1rem; padding: 1.2rem 0; color: var(--paper-muted); cursor: pointer; font: 500 .62rem/1.5 var(--mono); letter-spacing: .12em; list-style: none; }
 .puzzle-rules summary::-webkit-details-marker { display: none; }
 .puzzle-rules summary span { color: var(--red); }
-.puzzle-rules ol, .problem-reveal ol { margin: 0 0 1.5rem; padding-left: 1.4rem; color: var(--paper-muted); line-height: 1.7; }
-.puzzle-rules li + li, .problem-reveal li + li { margin-top: .65rem; }
+.problem-reveal ol { margin: 0 0 1.5rem; padding-left: 1.4rem; color: var(--paper-muted); line-height: 1.7; }
+.problem-reveal li + li { margin-top: .65rem; }
 .puzzle-success__heading { margin-top: clamp(2.2rem, 5vw, 4.7rem); }
 .problem-reveal { padding-block: clamp(4rem, 8vw, 7rem); }
 .problem-reveal h2 { margin: 0 0 1.2rem; font-size: clamp(2.5rem, 7vw, 5.5rem); line-height: 1; letter-spacing: -.06em; }
@@ -334,19 +331,13 @@ button { font: inherit; }
 .participate .action-card + .action-card { border-left: 0; border-top: 1px solid var(--line); }
 .participate .action-card__label { font-size: clamp(1.3rem, 3vw, 2.6rem); letter-spacing: -.035em; }
 .action-card:focus-visible .arrow-icon { transform: translate(2px, -2px); }
-.event-clue[lang='ja'] { font-family: var(--mono), 'Yu Gothic', 'Hiragino Kaku Gothic ProN', sans-serif; font-size: .75rem; }
-.event-clue { display: block; width: fit-content; margin-block: .8rem; color: var(--paper-muted); font-size: .75rem; line-height: 1.7; letter-spacing: .06em; text-transform: none; }
-.hero__metadata .event-clue { flex-basis: 100%; margin: .25rem 0 0; }
 .puzzle-stage { position: relative; }
-.puzzle-challenge { display: grid; gap: 2.5rem; margin-top: 2.5rem; }
+.puzzle-challenge { display: grid; gap: 2rem; margin-top: 2.5rem; }
 .puzzle-challenge__heading h2, .puzzle-success h2 { margin: 1rem 0; font-size: clamp(2.8rem, 7vw, 6.2rem); font-weight: 650; line-height: .98; letter-spacing: -.065em; overflow-wrap: anywhere; }
 .puzzle-challenge__message, .puzzle-stage__pending { max-width: 29rem; color: var(--paper-muted); font-size: 1rem; line-height: 1.7; }
 .puzzle-challenge__workspace { min-width: 0; width: 100%; max-width: 32rem; }
-.puzzle-grid { width: 100%; border-collapse: collapse; table-layout: fixed; font: 600 clamp(1.2rem, 4vw, 1.7rem)/1.2 var(--mono); text-align: center; }
-.puzzle-grid td, .puzzle-grid th { height: clamp(2.8rem, 6vw, 3.6rem); padding: .4rem; }
-.puzzle-grid td { border: 1px solid var(--line); }
-.puzzle-grid th { color: var(--paper-muted); font-size: .75rem; font-weight: 400; }
-.puzzle-grid th:first-child, .puzzle-grid thead td { width: 1.75rem; border: 0; }
+.puzzle-cipher { padding: 1rem 0; border-block: 1px solid var(--line); user-select: text; }
+.puzzle-cipher p { width: fit-content; max-width: 100%; margin: 1rem 0 .45rem; color: var(--paper); font: 600 clamp(1.25rem, 5vw, 2rem)/1.35 var(--mono); letter-spacing: .11em; white-space: nowrap; }
 .puzzle-challenge__input-row { flex-wrap: wrap; }
 .puzzle-challenge__input-row input { min-height: 3rem; width: 100%; font-size: 1rem; }
 .puzzle-challenge__input-row button { min-height: 3rem; min-width: 6rem; font-size: .75rem; cursor: pointer; }
@@ -354,15 +345,18 @@ button { font: inherit; }
 .puzzle-rules summary { min-height: 3rem; font-size: .75rem; }
 .puzzle-rules summary::marker { content: ''; }
 .puzzle-rules[open] summary span { transform: rotate(45deg); }
-.puzzle-rules ol { font-size: 1rem; padding-right: .25rem; }
-.puzzle-rules__numerals { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0 0 1.5rem; gap: .5rem; color: var(--paper-muted); font: 500 1rem/1.5 var(--mono); }
-.puzzle-rules__numerals > div { display: flex; align-items: center; gap: .4rem; }
-.puzzle-rules__numerals dd { margin: 0; }
+.puzzle-rules__content { padding: 0 0 1.3rem; font-family: 'Yu Gothic', 'Hiragino Kaku Gothic ProN', sans-serif; }
+.puzzle-rules__content h3 { margin: .2rem 0 .8rem; color: var(--paper); font-size: 1.05rem; font-weight: 600; }
+.puzzle-rules__content p { margin: 0 0 1rem; color: var(--paper-muted); font-size: .9rem; line-height: 1.7; overflow-wrap: anywhere; }
+.puzzle-rules__settings { margin: 0; border-top: 1px solid var(--line-soft); }
+.puzzle-rules__settings > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .1rem .7rem; padding: .42rem 0; border-bottom: 1px solid var(--line-soft); font-size: .9rem; line-height: 1.5; }
+.puzzle-rules__settings dt { color: var(--paper-muted); }
+.puzzle-rules__settings dd { margin: 0; color: var(--paper); font-family: var(--mono), 'Yu Gothic', sans-serif; overflow-wrap: anywhere; }
 .puzzle-confirmation { height: 1px; margin-top: 2rem; background: var(--red); transform-origin: left; }
 .puzzle-success { margin-block: 3rem; }
+.puzzle-success__message { color: var(--paper-muted); font: 500 .9rem/1.5 var(--mono); letter-spacing: .1em; }
 .puzzle-stage .problem-reveal { padding-block: 2rem; }
 .puzzle-stage .problem-reveal h2 { font-size: clamp(1.8rem, 4vw, 3rem); }
-.puzzle-stage__annotation { margin-top: 2rem; }
 .puzzle-reset { min-height: 2.75rem; margin-top: 1rem; padding: .6rem 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; color: var(--paper-muted); font: 500 .69rem/1.5 var(--mono); cursor: pointer; }
 .submission-next { margin-top: 3rem; padding-block: 2rem; border-top: 1px solid var(--red); }
 .submission-next h2 { max-width: 20ch; margin: 1.3rem 0; font-size: clamp(2rem, 4vw, 3.8rem); font-weight: 550; line-height: 1.05; letter-spacing: -.05em; }

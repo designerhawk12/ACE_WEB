@@ -1,11 +1,10 @@
 export const eventPhases = ['teaser', 'puzzle', 'problem-unlocked', 'submission', 'closed'] as const;
 export type EventPhase = (typeof eventPhases)[number];
-export type ClueSlot = 'header' | 'hero' | 'sequence' | 'about' | 'challenge' | 'actions' | 'footer';
-
 export type PuzzleContent = {
-  grid: readonly (readonly string[])[];
-  rules: readonly string[];
-  clues: Partial<Record<ClueSlot, string>>;
+  ciphertext: string;
+  protocolTitle: string;
+  instructions: string;
+  settings: readonly { label: string; value: string }[];
 };
 
 export type ProblemStatement = {
@@ -94,7 +93,7 @@ export const phasePresentation: Record<EventPhase, PhasePresentation> = {
     challenge: {
       label: 'DECODING CHALLENGE',
       status: 'PHASE 01 / LIVE',
-      headline: 'TURING PROTOCOL',
+      headline: 'ENIGMA PROTOCOL',
       description: 'A decoding challenge stands between you and the brief.',
       plateCaption: 'OBJECTIVE / DECODE',
     },
