@@ -21,8 +21,7 @@ export async function writeOverride(value: StoredOverride): Promise<void> {
   const token = process.env.ACE_GLOBAL_CONFIG_WRITE_TOKEN;
   if (!id || !token) throw new Error('Global Config write access is unavailable');
 
-  // The product is Global Config, but Vercel's REST write route retains edge-config.
-  const url = new URL(`https://api.vercel.com/v1/edge-config/${encodeURIComponent(id)}/items`);
+  const url = new URL(`https://api.vercel.com/v1/global-config/${encodeURIComponent(id)}/items`);
   if (process.env.ACE_GLOBAL_CONFIG_TEAM_ID) url.searchParams.set('teamId', process.env.ACE_GLOBAL_CONFIG_TEAM_ID);
   const response = await fetch(url, {
     method: 'PATCH',

@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createServer } from 'vite';
 
-test('Global Config batch write uses the edge-config REST route for puzzle and automatic values', async () => {
+test('Global Config batch write uses the global-config REST route for puzzle and automatic values', async () => {
   const server = await createServer({ server: { middlewareMode: true, hmr: false }, appType: 'custom', optimizeDeps: { noDiscovery: true } });
   const previous = {
     id: process.env.ACE_GLOBAL_CONFIG_ID,
@@ -25,7 +25,7 @@ test('Global Config batch write uses the edge-config REST route for puzzle and a
     assert.equal(calls.length, 2);
     for (const call of calls) {
       assert.equal(call.url.origin, 'https://api.vercel.com');
-      assert.equal(call.url.pathname, '/v1/edge-config/ecfg_test/items');
+      assert.equal(call.url.pathname, '/v1/global-config/ecfg_test/items');
       assert.equal(call.url.searchParams.get('teamId'), 'team_test');
       assert.equal(call.init.method, 'PATCH');
       assert.equal(call.init.headers.Authorization, 'Bearer test-only-token');

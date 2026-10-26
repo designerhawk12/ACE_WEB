@@ -14,7 +14,7 @@ test('central links and seven-stage timeline keep forms distinct', async () => {
     assert.equal(getPublicEventUrl('https://example.com/register'), null);
     assert.equal(getPublicEventUrl('http://forms.example.org/form'), null);
     assert.equal(getPublicEventUrl('not a url'), null);
-    assert.equal(getPublicEventUrl(eventConfig.registrationUrl), null, 'current registration placeholder must stay disabled');
+    assert.ok(getPublicEventUrl(eventConfig.registrationUrl)?.startsWith('https://docs.google.com/forms/'), 'configured registration form must stay actionable');
     assert.ok(getPublicEventUrl(eventConfig.whatsappUrl)?.startsWith('https://chat.whatsapp.com/'));
     assert.equal(getSubmissionUrl(), null, 'missing final form must stay disabled');
 
