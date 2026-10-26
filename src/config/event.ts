@@ -30,7 +30,7 @@ export const eventConfig: EventConfig = {
   // Verify the invitation in WhatsApp before publishing; syntax alone cannot confirm it is active.
   whatsappUrl: 'https://chat.whatsapp.com/IlVGvqCeiSN7LM8VBNl43n',
   // LAUNCH BLOCKER: add the second-stage PPT form separately; never reuse initial registration.
-  submissionUrl: null,
+  submissionUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSdG48YxOZh6ZK9DNZx3a44zI1bTS-SC1-3zbAoEHXdhEIGCmQ/viewform',
   submissionDeadline: eventSchedule.submissionDeadline,
   puzzle: null,
   // Add confirmed event Domains here. Never ship test Domains to participants.
