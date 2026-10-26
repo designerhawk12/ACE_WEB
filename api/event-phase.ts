@@ -1,4 +1,4 @@
-import { readOverride } from '../server/overrideStore';
-import { createPhaseHandler } from '../server/phaseCore';
+import { readOverride } from '../server/overrideStore.js';
+import { createPhaseHandler } from '../server/phaseCore.js';
 
 export const GET = createPhaseHandler(readOverride);

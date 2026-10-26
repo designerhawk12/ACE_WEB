@@ -1,4 +1,4 @@
-import type { StoredOverride } from './overrideStore';
+import type { StoredOverride } from './overrideStore.js';
 
 const headers = { 'Cache-Control': 'no-store, max-age=0', 'Content-Type': 'application/json; charset=utf-8' };
 

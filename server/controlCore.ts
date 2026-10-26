@@ -1,5 +1,5 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
-import type { StoredOverride } from './overrideStore';
+import type { StoredOverride } from './overrideStore.js';
 
 export type ControlOperation = 'authenticate' | 'force-puzzle' | 'automatic';
 type Dependencies = {
