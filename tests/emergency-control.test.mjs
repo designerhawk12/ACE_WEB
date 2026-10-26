@@ -80,3 +80,13 @@ test('public phase endpoint falls back to automatic for unavailable or malformed
   const unavailable = await createPhaseHandler(async () => { throw new Error('store unavailable'); })();
   assert.deepEqual(await unavailable.json(), { manualPhaseOverride: null });
 });
+
+test('write failures keep internal diagnostics out of the admin response', async () => {
+  const handler = createControlHandler({
+    password: 'a-separate-test-secret', read: async () => null,
+    write: async () => { throw new Error('Vercel internal write detail'); },
+  });
+  const result = await handler(request('force-puzzle', 'a-separate-test-secret', '192.0.2.11'));
+  assert.equal(result.status, 503);
+  assert.deepEqual(await result.json(), { error: 'Control unavailable. Try again later.' });
+});
