@@ -26,7 +26,7 @@ type EventConfig = {
 export const eventConfig: EventConfig = {
   eventPhase: 'teaser',
   // LAUNCH BLOCKER: replace this placeholder with the real initial registration form.
-  registrationUrl: 'https://example.com/register',
+  registrationUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSd19CzZZ30af_LDPY54VTQPymOe7A_tALptnVRXTBgC6MFTYA/viewform',
   // Verify the invitation in WhatsApp before publishing; syntax alone cannot confirm it is active.
   whatsappUrl: 'https://chat.whatsapp.com/IlVGvqCeiSN7LM8VBNl43n',
   // LAUNCH BLOCKER: add the second-stage PPT form separately; never reuse initial registration.
