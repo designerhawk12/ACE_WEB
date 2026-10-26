@@ -24,6 +24,7 @@ export const eventTimes = {
 } as const;
 
 export type ScheduleWindow = 'upcoming' | 'live' | 'ended';
+export type ManualPhaseOverride = 'puzzle' | null;
 export type CountdownKind = 'registration' | 'challenge' | 'statements' | 'submission';
 
 export function getScheduleWindow(now: number): ScheduleWindow {
@@ -32,19 +33,20 @@ export function getScheduleWindow(now: number): ScheduleWindow {
   return 'ended';
 }
 
-export function getEffectivePhase(now: number, baseline: EventPhase, isDevPreview: boolean, solved: boolean): EventPhase {
-  return getPhaseForWindow(getScheduleWindow(now), baseline, isDevPreview, solved);
+export function getEffectivePhase(now: number, baseline: EventPhase, isDevPreview: boolean, solved: boolean, manualOverride: ManualPhaseOverride = null): EventPhase {
+  return getPhaseForWindow(getScheduleWindow(now), baseline, isDevPreview, solved, manualOverride);
 }
 
-export function getPhaseForWindow(window: ScheduleWindow, baseline: EventPhase, isDevPreview: boolean, solved: boolean): EventPhase {
+export function getPhaseForWindow(window: ScheduleWindow, baseline: EventPhase, isDevPreview: boolean, solved: boolean, manualOverride: ManualPhaseOverride = null): EventPhase {
+  if (manualOverride === 'puzzle') return solved ? 'problem-unlocked' : 'puzzle';
   if (baseline === 'submission' || baseline === 'closed') return baseline;
   if (window === 'upcoming' && !isDevPreview) return 'teaser';
   if (solved) return 'problem-unlocked';
   return window === 'ended' ? 'closed' : 'puzzle';
 }
 
-export function canSolveAt(now: number, isDevPreview: boolean): boolean {
-  return now < eventTimes.challengeEnd && (isDevPreview || now >= eventTimes.challengeStart);
+export function canSolveAt(now: number, isDevPreview: boolean, manualOverride: ManualPhaseOverride = null): boolean {
+  return manualOverride === 'puzzle' || (now < eventTimes.challengeEnd && (isDevPreview || now >= eventTimes.challengeStart));
 }
 
 export function isRegistrationOpenAt(now: number): boolean {

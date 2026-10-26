@@ -53,6 +53,17 @@ test('public phase and solve permission switch at the exact boundaries', () => {
   assert.equal(getEffectivePhase(end, 'submission', false, false), 'submission');
 });
 
+test('shared manual puzzle override takes priority and clearing restores each scheduled phase', () => {
+  for (const [now, automatic] of [[start - 1, 'teaser'], [start, 'puzzle'], [end - 1, 'puzzle'], [end, 'closed']]) {
+    assert.equal(getEffectivePhase(now, 'teaser', false, false, 'puzzle'), 'puzzle');
+    assert.equal(getEffectivePhase(now, 'teaser', false, true, 'puzzle'), 'problem-unlocked');
+    assert.equal(canSolveAt(now, false, 'puzzle'), true);
+    assert.equal(getEffectivePhase(now, 'teaser', false, false, null), automatic);
+  }
+  assert.equal(canSolveAt(start - 1, false, null), false);
+  assert.equal(canSolveAt(end, false, null), false);
+});
+
 test('timeline countdowns use total hours, switch labels, and never go negative', () => {
   assert.equal(formatCountdown(end, end - (66 * 3600 + 15 * 60 + 30) * 1000), '66HR 15MIN 30SEC');
   assert.equal(formatCountdown(end, end + 1000), '00HR 00MIN 00SEC');

@@ -1,18 +1,20 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, type MouseEvent } from 'react';
 import { CinematicIntro } from './components/CinematicIntro';
 import { EventPhaseContent } from './components/EventPhaseContent';
 import { EventTimeline } from './components/EventTimeline';
 import { HeroVideo } from './components/HeroVideo';
+import { EmergencyEventControl } from './components/EmergencyEventControl';
 import { SubmissionAction } from './components/SubmissionAction';
 import { useTeaserMotion } from './hooks/useTeaserMotion';
 import { useEventRuntime } from './context/EventRuntime';
 import { eventConfig, getPublicEventUrl, phasePresentation } from './config/event';
 import { isRegistrationOpenAt } from './config/schedule';
 import { useRegistrationOpen, useSubmissionOpen } from './hooks/useEventClock';
+import { nextTap, type TapSequence } from './lib/emergencyTap';
 
-function BrandMark() {
+function BrandMark({ onClick }: { onClick?: (event: MouseEvent<HTMLAnchorElement>) => void }) {
   return (
-    <a className="brand" href="#top" aria-label="ACE Club — back to top">
+    <a className="brand" href="#top" aria-label="ACE Club — back to top" onClick={onClick}>
       <img src="/ace-mark.svg" alt="" width="34" height="34" />
       <span className="brand__wordmark">ACE <span>CLUB</span></span>
     </a>
@@ -53,6 +55,8 @@ export default function App() {
   const { phase, accessGranted } = useEventRuntime();
   const submissionOpen = useSubmissionOpen();
   const [introOpen, setIntroOpen] = useState(true);
+  const [controlOpen, setControlOpen] = useState(false);
+  const tapsRef = useRef<TapSequence>({ count: 0, startedAt: 0 });
   const introDismissedRef = useRef(false);
   const mainRef = useRef<HTMLElement>(null);
   useTeaserMotion(mainRef, !introOpen);
@@ -67,6 +71,12 @@ export default function App() {
 
   const completeIntro = useCallback(() => dismissIntro(), [dismissIntro]);
   const skipIntro = useCallback(() => dismissIntro(), [dismissIntro]);
+  const onBrandClick = useCallback((event: MouseEvent<HTMLAnchorElement>) => {
+    const result = nextTap(tapsRef.current, Date.now());
+    tapsRef.current = result.sequence;
+    if (result.sequence.count > 1 || result.unlocked) event.preventDefault();
+    if (result.unlocked) setControlOpen(true);
+  }, []);
 
   return (
     <>
@@ -80,7 +90,7 @@ export default function App() {
         inert={introOpen ? true : undefined}
       >
         <header className="site-header page-gutter">
-          <BrandMark />
+          <BrandMark onClick={onBrandClick} />
           <nav className="site-nav" aria-label="Main navigation">
             <a href="#challenge">THE CHALLENGE</a>
             <a href="#timeline">SEQUENCE</a>
@@ -175,6 +185,7 @@ export default function App() {
         </footer>
       </div>
       {!introOpen && accessGranted && submissionOpen && <SubmissionAction floating />}
+      <EmergencyEventControl open={controlOpen} onClose={() => setControlOpen(false)} />
     </>
   );
 }

@@ -11,7 +11,7 @@ import { canSolveAt } from '../config/schedule';
 import { ScheduleReadout } from './ScheduleReadout';
 
 export default function PuzzlePhase({ puzzle }: { puzzle: PuzzleContent }) {
-  const { accessGranted, challengeOpen, markSolved, reset, isDevPreview } = useEventRuntime();
+  const { accessGranted, challengeOpen, markSolved, reset, isDevPreview, manualOverride } = useEventRuntime();
   const reduced = useReducedMotion();
   const [attempts, setAttempts] = useState(0);
   const [feedback, setFeedback] = useState('');
@@ -32,13 +32,13 @@ export default function PuzzlePhase({ puzzle }: { puzzle: PuzzleContent }) {
   }, [accessGranted]);
 
   const submit = async (answer: string) => {
-    if (busy.current || accessGranted || !challengeOpen || !canSolveAt(Date.now(), isDevPreview)) return;
+    if (busy.current || accessGranted || !challengeOpen || !canSolveAt(Date.now(), isDevPreview, manualOverride)) return;
     busy.current = true;
     setStatus('checking');
     try {
       const correct = await verifyAnswer(answer);
       if (!mounted.current) return;
-      if (!canSolveAt(Date.now(), isDevPreview)) {
+      if (!canSolveAt(Date.now(), isDevPreview, manualOverride)) {
         setFeedback('CHALLENGE ENDED.');
         setStatus('idle');
         busy.current = false;
