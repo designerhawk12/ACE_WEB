@@ -63,7 +63,7 @@ export function SubmissionNextSteps() {
       <p className="eyebrow">05 / CHOOSE YOUR DIRECTION</p>
       <h3 id="domains-title">Domains</h3>
       <p>Choose any application that falls within a Domain. You are not assigned a specific application; your choice must satisfy the non-open-source rule.</p>
-      {domains.length ? <ul className="unlocked-guide__domains">{domains.map(domain => <li key={domain.id}><h4>{domain.name}</h4>{domain.description && <p>{domain.description}</p>}</li>)}</ul>
+      {domains.length ? <ul className="unlocked-guide__domains">{domains.map((domain, index) => <li key={domain.id}><span className="unlocked-guide__domain-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><div><h4>{domain.name}</h4>{domain.description && <p>{domain.description}</p>}</div></li>)}</ul>
         : <p className="unlocked-guide__pending" role="status">Domains will appear here.</p>}
     </section>
 

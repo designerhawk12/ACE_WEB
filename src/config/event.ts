@@ -33,8 +33,21 @@ export const eventConfig: EventConfig = {
   submissionUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSdG48YxOZh6ZK9DNZx3a44zI1bTS-SC1-3zbAoEHXdhEIGCmQ/viewform',
   submissionDeadline: eventSchedule.submissionDeadline,
   puzzle: null,
-  // Add confirmed event Domains here. Never ship test Domains to participants.
-  domains: [],
+  domains: [
+    { id: 'finance', name: 'Finance', description: 'Payments, personal finance, banking, investing, budgeting, lending, and other financial workflows.' },
+    { id: 'agriculture', name: 'Agriculture', description: 'Digital tools for farming, crop planning, field monitoring, agricultural operations, marketplaces, and farm productivity.' },
+    { id: 'health-fitness', name: 'Health and Fitness', description: 'Tools for workouts, fitness tracking, wellness routines, nutrition, health habits, and personal performance.' },
+    { id: 'education-student-productivity', name: 'Education and Student Productivity', description: 'Software for learning, studying, note-taking, collaboration, scheduling, assignments, research, and student workflows.' },
+    { id: 'environmental-sustainability', name: 'Environmental Sustainability', description: 'Applications for reducing waste, using resources efficiently, tracking environmental impact, recycling, conservation, or sustainable habits.' },
+    { id: 'cybersecurity-digital-forensics', name: 'Cybersecurity and Digital Forensics', description: 'Tools for protecting systems, monitoring security events, investigating incidents, identity and privacy, or analyzing digital evidence.' },
+    { id: 'transportation-mobility', name: 'Transportation and Mobility', description: 'Software for navigation, commuting, public transport, ride services, traffic, routing, parking, and vehicle experiences.' },
+    { id: 'digital-media-content', name: 'Digital Media and Content Platforms', description: 'Applications for creating, publishing, organizing, recommending, viewing, or interacting with video, audio, images, and written content.' },
+    { id: 'industrial-automation', name: 'Industrial Automation', description: 'Software for monitoring or controlling machines, production, industrial processes, maintenance, and operational workflows.' },
+    { id: 'ai-algorithm-transparency', name: 'AI and Algorithm Transparency', description: 'Applications involving AI decisions, recommendations, automation, or tools that explain model behavior, fairness, and algorithmic systems.' },
+    { id: 'ecommerce-supply-chain-logistics', name: 'E-commerce — Supply Chain and Logistics', description: 'Software for online commerce, inventory, fulfillment, delivery, warehousing, procurement, tracking, or supply-chain coordination.' },
+    { id: 'smart-buildings-energy', name: 'Smart Buildings and Energy', description: 'Applications for building automation, energy use, smart infrastructure, lighting, climate control, and facility management.' },
+    { id: 'everyday-computing-system-utilities', name: 'Everyday Computing & System Utilities', description: 'Utilities for file management, system monitoring, device management, backup, search, productivity, and everyday computer workflows.' },
+  ],
 };
 
 export function getPublicEventUrl(value: string | null): string | null {

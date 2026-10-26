@@ -487,7 +487,9 @@ button { font: inherit; }
 .unlocked-guide__criteria h4, .unlocked-guide__domains h4 { margin: 0 0 .6rem; }
 .unlocked-guide__criteria p, .unlocked-guide__domains p { max-width: 22rem; margin: 0; color: var(--paper-muted); line-height: 1.6; }
 .unlocked-guide__domains { display: grid; gap: 1rem; padding: 0; list-style: none; }
-.unlocked-guide__domains li { padding: 1rem; border: 1px solid var(--line); }
+.unlocked-guide__domains li { display: grid; grid-template-columns: 1.8rem minmax(0, 1fr); gap: .8rem; padding: 1rem; border: 1px solid var(--line); }
+.unlocked-guide__domain-index { color: var(--red); font: 600 .7rem/1.5 var(--mono); letter-spacing: .06em; }
+.unlocked-guide__domains h4 { overflow-wrap: anywhere; }
 .unlocked-guide__pending { padding: 1rem 0; border-top: 1px solid var(--line); color: var(--paper-muted); font: 500 .8rem/1.5 var(--mono) !important; }
 .submission-action { cursor: pointer; }
 .submission-float { position: fixed; z-index: 85; right: max(1rem, env(safe-area-inset-right)); bottom: max(1rem, env(safe-area-inset-bottom)); display: flex; min-width: 11rem; min-height: 3.25rem; align-items: center; justify-content: space-between; gap: 1rem; padding: .85rem 1rem; border: 1px solid var(--red); background: var(--ink); box-shadow: 0 8px 30px rgba(0,0,0,.55); color: var(--paper); font: 650 .72rem/1.2 var(--mono); letter-spacing: .08em; cursor: pointer; }

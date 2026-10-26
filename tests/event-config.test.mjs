@@ -7,6 +7,22 @@ test('central links and seven-stage timeline keep forms distinct', async () => {
   try {
     const { eventConfig, getPublicEventUrl, getSubmissionUrl, timelineMilestones } = await server.ssrLoadModule('/src/config/event.ts');
     assert.equal(eventConfig.eventPhase, 'teaser');
+    assert.deepEqual(eventConfig.domains.map(({ id, name }) => [id, name]), [
+      ['finance', 'Finance'],
+      ['agriculture', 'Agriculture'],
+      ['health-fitness', 'Health and Fitness'],
+      ['education-student-productivity', 'Education and Student Productivity'],
+      ['environmental-sustainability', 'Environmental Sustainability'],
+      ['cybersecurity-digital-forensics', 'Cybersecurity and Digital Forensics'],
+      ['transportation-mobility', 'Transportation and Mobility'],
+      ['digital-media-content', 'Digital Media and Content Platforms'],
+      ['industrial-automation', 'Industrial Automation'],
+      ['ai-algorithm-transparency', 'AI and Algorithm Transparency'],
+      ['ecommerce-supply-chain-logistics', 'E-commerce — Supply Chain and Logistics'],
+      ['smart-buildings-energy', 'Smart Buildings and Energy'],
+      ['everyday-computing-system-utilities', 'Everyday Computing & System Utilities'],
+    ]);
+    assert.ok(eventConfig.domains.every(({ description }) => description?.length > 30), 'each Domain needs a useful participant description');
     assert.deepEqual(timelineMilestones.map(({ name }) => name), [
       'Registration', 'Decoding Challenge', 'Domains', 'PPT Submission',
       'Shortlisting', 'Presentations', 'Winner Announcement',
@@ -16,7 +32,7 @@ test('central links and seven-stage timeline keep forms distinct', async () => {
     assert.equal(getPublicEventUrl('not a url'), null);
     assert.ok(getPublicEventUrl(eventConfig.registrationUrl)?.startsWith('https://docs.google.com/forms/'), 'configured registration form must stay actionable');
     assert.ok(getPublicEventUrl(eventConfig.whatsappUrl)?.startsWith('https://chat.whatsapp.com/'));
-    assert.equal(getSubmissionUrl(), null, 'missing final form must stay disabled');
+    assert.equal(getSubmissionUrl(), eventConfig.submissionUrl, 'configured final form must stay actionable');
 
     const originalRegistration = eventConfig.registrationUrl;
     const originalSubmission = eventConfig.submissionUrl;
