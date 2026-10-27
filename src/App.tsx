@@ -4,6 +4,7 @@ import { EventPhaseContent } from './components/EventPhaseContent';
 import { EventTimeline } from './components/EventTimeline';
 import { HeroVideo } from './components/HeroVideo';
 import { EmergencyEventControl } from './components/EmergencyEventControl';
+import { FloatingRegistrationAction } from './components/FloatingRegistrationAction';
 import { SubmissionAction } from './components/SubmissionAction';
 import { useTeaserMotion } from './hooks/useTeaserMotion';
 import { useEventRuntime } from './context/EventRuntime';
@@ -184,7 +185,10 @@ export default function App() {
           <a className="back-to-top" href="#top">BACK TO TOP <span aria-hidden="true">↑</span></a>
         </footer>
       </div>
-      {!introOpen && accessGranted && submissionOpen && <SubmissionAction floating />}
+      {!introOpen && <div className="floating-actions">
+        <FloatingRegistrationAction />
+        {accessGranted && submissionOpen && <SubmissionAction floating />}
+      </div>}
       <EmergencyEventControl open={controlOpen} onClose={() => setControlOpen(false)} />
     </>
   );
