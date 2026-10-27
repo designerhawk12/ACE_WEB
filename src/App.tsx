@@ -53,7 +53,7 @@ function EventAction({ className, href, index, label, state, registration = fals
 }
 
 export default function App() {
-  const { phase, accessGranted } = useEventRuntime();
+  const { phase } = useEventRuntime();
   const submissionOpen = useSubmissionOpen();
   const [introOpen, setIntroOpen] = useState(true);
   const [controlOpen, setControlOpen] = useState(false);
@@ -187,7 +187,7 @@ export default function App() {
       </div>
       {!introOpen && <div className="floating-actions">
         <FloatingRegistrationAction />
-        {accessGranted && submissionOpen && <SubmissionAction floating />}
+        {submissionOpen && <SubmissionAction floating />}
       </div>}
       <EmergencyEventControl open={controlOpen} onClose={() => setControlOpen(false)} />
     </>

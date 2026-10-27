@@ -503,6 +503,15 @@ button { font: inherit; }
 .submission-float:hover, .submission-float:focus-visible { background: var(--ink-raised); }
 .submission-float--pending { border-color: var(--line); color: var(--paper-muted); cursor: not-allowed; }
 .submission-float--pending > :last-child { color: var(--steel); }
+.submission-gate { width: min(92vw, 27rem); max-height: 88dvh; padding: clamp(1.25rem, 5vw, 2rem); border: 1px solid var(--line); background: var(--ink-raised); color: var(--paper); box-shadow: 0 1.5rem 5rem #000b; }
+.submission-gate::backdrop { background: #000c; }
+.submission-gate h2 { margin: 1.5rem 0 .8rem; font: italic 400 clamp(1.8rem, 6vw, 2.5rem)/1.1 var(--display); }
+.submission-gate h2 span { color: var(--red); }
+.submission-gate > p:not(.eyebrow) { margin: 0; color: var(--paper-muted); line-height: 1.6; }
+.submission-gate__actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.7rem; }
+.submission-gate__actions a, .submission-gate__actions button { display: inline-flex; min-height: 2.75rem; align-items: center; justify-content: center; gap: .7rem; padding: .65rem .9rem; border: 1px solid var(--line); background: transparent; color: var(--paper); cursor: pointer; font: 600 .68rem/1.3 var(--mono); letter-spacing: .05em; }
+.submission-gate__actions a { border-color: var(--red); }
+.submission-gate__actions a:hover, .submission-gate__actions a:focus-visible, .submission-gate__actions button:hover, .submission-gate__actions button:focus-visible { background: #211b19; }
 .site-shell:has(+ .floating-actions .registration-float) { padding-bottom: 4.5rem; }
 .site-shell:has(+ .floating-actions .submission-float) { padding-bottom: 8rem; }
 @media (min-width: 700px) { .unlocked-guide__criteria { grid-template-columns: repeat(3, minmax(0, 1fr)); } .unlocked-guide__domains { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

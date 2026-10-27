@@ -11,6 +11,7 @@ type EventRuntime = {
   phase: EventPhase;
   isDevPreview: boolean;
   accessGranted: boolean;
+  hasSolvedPuzzle: boolean;
   challengeOpen: boolean;
   puzzle: PuzzleContent | null;
   manualOverride: ManualPhaseOverride;
@@ -77,7 +78,7 @@ export function EventProvider({ children }: { children: ReactNode }) {
   const puzzleActive = phase === 'puzzle' || phase === 'problem-unlocked';
   const challengeOpen = manualOverride === 'puzzle' || scheduleWindow === 'live' || (scheduleWindow === 'upcoming' && isDevPreview);
   return <EventContext.Provider value={{
-    phase, isDevPreview, accessGranted: puzzleActive && solved, challengeOpen, manualOverride,
+    phase, isDevPreview, accessGranted: puzzleActive && solved, hasSolvedPuzzle: solved, challengeOpen, manualOverride,
     applyManualOverride,
     puzzle: puzzleActive ? eventConfig.puzzle ?? enigmaProtocol : null,
     markSolved, reset,
