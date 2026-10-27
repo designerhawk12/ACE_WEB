@@ -1,10 +1,13 @@
 import { eventConfig } from '../config/event';
+import { useEventRuntime } from '../context/EventRuntime';
 import { formatIstDate } from '../config/schedule';
 import { useScheduleWindow, useSubmissionOpen } from '../hooks/useEventClock';
 import { ScheduleReadout } from './ScheduleReadout';
 import { SubmissionAction } from './SubmissionAction';
+import { PptSubmissionFormat } from './PptSubmissionFormat';
 
 export function SubmissionNextSteps() {
+  const { hasSolvedPuzzle } = useEventRuntime();
   const submissionOpen = useSubmissionOpen();
   const scheduleWindow = useScheduleWindow();
   const domains = eventConfig.domains;
@@ -67,8 +70,10 @@ export function SubmissionNextSteps() {
         : <p className="unlocked-guide__pending" role="status">Domains will appear here.</p>}
     </section>
 
+    {hasSolvedPuzzle && <PptSubmissionFormat />}
+
     <section className="unlocked-guide__section unlocked-guide__finish" aria-labelledby="submission-finish-title">
-      <p className="eyebrow">06 / FINAL STEP</p>
+      <p className="eyebrow">07 / FINAL STEP</p>
       <h3 id="submission-finish-title">Select → Build → Submit</h3>
       <p>Select a Domain and an eligible application. Recreate one feature, add your improvement, then prepare and submit your PPT through the final form before the deadline.</p>
       {!submissionOpen && <p className="unlocked-guide__pending">{scheduleWindow === 'upcoming' ? 'The final PPT submission window has not opened yet.' : 'PPT submissions have ended. Your unlocked guide remains available for reference.'}</p>}

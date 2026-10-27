@@ -1,0 +1,59 @@
+const slides = [
+  {
+    number: '01',
+    title: 'Slide 1 — Project Overview & Problem Identification',
+    points: [
+      'Team name, members, project title',
+      'Existing software selected for analysis',
+      'Problem or limitation identified',
+      'Why this problem needs to be solved',
+    ],
+  },
+  {
+    number: '02',
+    title: 'Slide 2 — Reverse Engineering & Analysis',
+    points: [
+      'How the existing software or selected feature works',
+      'Analysis of its workflow, functionality, or technical design',
+      'Evidence supporting the identified limitation',
+      'Diagrams or screenshots illustrating findings',
+    ],
+  },
+  {
+    number: '03',
+    title: 'Slide 3 — Proposed Solution & Implementation',
+    points: [
+      'Your innovative solution to the identified problem',
+      'How it improves upon the existing system',
+      'Technologies, tools, and frameworks used',
+      'Implementation architecture or workflow',
+    ],
+  },
+  {
+    number: '04',
+    title: 'Slide 4 — Working Prototype & Results',
+    points: [
+      'Screenshots of the actual working prototype',
+      'Demonstration of implemented features',
+      'Before-and-after comparison or measurable improvement',
+      'GitHub repository link and current limitations',
+    ],
+  },
+] as const;
+
+export function PptSubmissionFormat() {
+  return <section className="unlocked-guide__section ppt-format" aria-labelledby="ppt-format-title">
+    <p className="eyebrow">06 / SUBMISSION REFERENCE</p>
+    <h3 id="ppt-format-title">PPT SUBMISSION FORMAT</h3>
+    <p>Use the following 4-slide structure as a reference when preparing your submission.</p>
+    <ol className="ppt-format__slides">
+      {slides.map(slide => <li className="ppt-format__slide" key={slide.number}>
+        <div className="ppt-format__slide-heading">
+          <span className="ppt-format__number" aria-hidden="true">{slide.number}</span>
+          <h4>{slide.title}</h4>
+        </div>
+        <ul>{slide.points.map(point => <li key={point}>{point}</li>)}</ul>
+      </li>)}
+    </ol>
+  </section>;
+}
