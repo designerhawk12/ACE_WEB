@@ -18,13 +18,13 @@ export function SubmissionAction({ floating = false }: { floating?: boolean }) {
     <button className={className} type="button" onClick={() => dialogRef.current?.showModal()}>{content}</button>
     <dialog className="submission-gate" ref={dialogRef} aria-labelledby={`${dialogId}-title`} aria-describedby={`${dialogId}-description`}>
       <p className="eyebrow">ACE / SUBMISSION ACCESS</p>
-      <h2 id={`${dialogId}-title`}>Solve the Enigma first<span>.</span></h2>
-      <p id={`${dialogId}-description`}>Complete the Enigma puzzle to unlock PPT submission.</p>
+      <h2 id={`${dialogId}-title`}>Take the Human Test first<span>.</span></h2>
+      <p id={`${dialogId}-description`}>Complete the quick check to unlock PPT submission.</p>
       <div className="submission-gate__actions">
         {challengeOpen && (phase === 'puzzle' || phase === 'problem-unlocked') && <a href="#challenge" onClick={() => {
           dialogRef.current?.close();
           window.requestAnimationFrame(() => document.getElementById('puzzle-answer')?.focus({ preventScroll: true }));
-        }}>GO TO PUZZLE <span aria-hidden="true">↗</span></a>}
+        }}>GO TO HUMAN TEST <span aria-hidden="true">↗</span></a>}
         <button type="button" onClick={() => dialogRef.current?.close()}>CLOSE</button>
       </div>
     </dialog>

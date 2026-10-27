@@ -1,6 +1,5 @@
 import { useState, type FormEvent, type RefObject } from 'react';
 import type { PuzzleContent } from '../config/event';
-import { PuzzleRules } from './PuzzleRules';
 
 type PuzzleChallengeProps = {
   content: PuzzleContent;
@@ -15,29 +14,31 @@ export function PuzzleChallenge({ content, feedback, attempts, locked, inputRef,
   const [answer, setAnswer] = useState('');
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (answer.trim() && !locked) onSubmitAnswer(answer);
+    if (answer.trim() && !locked) {
+      onSubmitAnswer(answer);
+      setAnswer('');
+    }
   };
   return <div className="puzzle-challenge">
     <header className="puzzle-challenge__heading">
-      <p className="eyebrow">DECODING CHALLENGE</p>
-      <h2 id="challenge-title">ENIGMA<br />PROTOCOL</h2>
-      <p className="puzzle-challenge__message">SOLVE THIS PUZZLE TO UNLOCK THE DOMAINS.</p>
-      <blockquote className="puzzle-challenge__quote">“Sometimes it is the people no one can imagine anything of who do the things no one can imagine.”<cite>— The Imitation Game</cite></blockquote>
+      <p className="eyebrow">01 / HUMAN CHECK</p>
+      <h2 id="challenge-title">THE HUMAN<br />TEST</h2>
+      <div className="puzzle-challenge__intro">
+        {content.intro.map(line => <p key={line}>{line}</p>)}
+        <p className="puzzle-challenge__support">{content.supportingLine}</p>
+      </div>
     </header>
     <div className="puzzle-challenge__workspace">
-      <div className="puzzle-cipher" aria-label="Encrypted message">
-        <span className="eyebrow">CIPHERTEXT / 001</span>
-        <p>{content.ciphertext}</p>
-      </div>
+      <p className="eyebrow">QUICK CHECK / 001</p>
+      <p className="puzzle-challenge__question">{content.question}</p>
       <form className="puzzle-challenge__form" onSubmit={submit} aria-busy={locked}>
-        <label className="eyebrow" htmlFor="puzzle-answer">RECONSTRUCTED PHRASE</label>
+        <label className="eyebrow" htmlFor="puzzle-answer">YOUR ANSWER</label>
         <div className="puzzle-challenge__input-row">
-          <input ref={inputRef} id="puzzle-answer" value={answer} onChange={event => setAnswer(event.target.value)} disabled={locked} autoComplete="off" autoCapitalize="characters" spellCheck={false} maxLength={100} aria-describedby="puzzle-feedback" enterKeyHint="go" type="text" />
-          <button type="submit" disabled={locked || !answer.trim()}>DECODE <span aria-hidden="true">→</span></button>
+          <input ref={inputRef} id="puzzle-answer" value={answer} onChange={event => setAnswer(event.target.value)} disabled={locked} autoComplete="off" inputMode="numeric" spellCheck={false} maxLength={12} aria-describedby="puzzle-feedback" enterKeyHint="go" type="text" />
+          <button type="submit" disabled={locked || !answer.trim()}>CHECK ANSWER <span aria-hidden="true">→</span></button>
         </div>
-        <p className="puzzle-challenge__feedback" id="puzzle-feedback" role="status" aria-atomic="true"><span key={`${attempts}-${feedback}`}>{feedback}{attempts > 0 && <span className="sr-only"> Attempt {attempts}.</span>}</span></p>
+        <p className="puzzle-challenge__feedback" id="puzzle-feedback" role="status" aria-live="polite" aria-atomic="true">{feedback}{attempts > 0 && <span className="puzzle-challenge__attempt">ATTEMPT {attempts} / 3</span>}</p>
       </form>
-      <PuzzleRules content={content} />
     </div>
   </div>;
 }

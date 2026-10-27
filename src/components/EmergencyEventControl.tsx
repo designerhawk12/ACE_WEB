@@ -54,7 +54,7 @@ export function EmergencyEventControl({ open, onClose }: { open: boolean; onClos
         const expected = operation === 'force-puzzle' ? 'puzzle' : null;
         if (data.manualPhaseOverride !== expected) throw new Error('Control unavailable. Try again later.');
         applyManualOverride(expected);
-        setFeedback(expected === 'puzzle' ? 'PUZZLE OVERRIDE ACTIVE' : 'AUTOMATIC SCHEDULE RESTORED');
+        setFeedback(expected === 'puzzle' ? 'HUMAN TEST OVERRIDE ACTIVE' : 'AUTOMATIC SCHEDULE RESTORED');
         setConfirming(null);
       }
     } catch (error) {
@@ -80,13 +80,13 @@ export function EmergencyEventControl({ open, onClose }: { open: boolean; onClos
       <input id="emergency-password" ref={inputRef} type="password" autoComplete="off" required maxLength={256} />
       <div className="emergency-control__actions"><button type="button" onClick={onClose}>CANCEL</button><button type="submit" disabled={pending}>UNLOCK</button></div>
     </form> : <>
-      <p className="emergency-control__state">CURRENT MODE / <strong>{manualOverride === 'puzzle' ? 'FORCED PUZZLE' : 'AUTOMATIC SCHEDULE'}</strong><br />EFFECTIVE PHASE / <strong>{phase.toUpperCase()}</strong></p>
+      <p className="emergency-control__state">CURRENT MODE / <strong>{manualOverride === 'puzzle' ? 'FORCED HUMAN TEST' : 'AUTOMATIC SCHEDULE'}</strong><br />EFFECTIVE PHASE / <strong>{phase.toUpperCase()}</strong></p>
       <div className="emergency-control__actions">
-        <button type="button" disabled={pending || manualOverride === 'puzzle'} onClick={() => setConfirming('force-puzzle')}>FORCE PUZZLE LIVE</button>
+        <button type="button" disabled={pending || manualOverride === 'puzzle'} onClick={() => setConfirming('force-puzzle')}>FORCE HUMAN TEST LIVE</button>
         <button type="button" disabled={pending || manualOverride === null} onClick={() => setConfirming('automatic')}>RETURN TO AUTOMATIC</button>
       </div>
       {confirming && <div className="emergency-control__confirm" role="group" aria-label="Confirm release change">
-        <p>{confirming === 'force-puzzle' ? 'Force the Enigma challenge live for all participants?' : 'Return event phase control to the scheduled timeline?'}</p>
+        <p>{confirming === 'force-puzzle' ? 'Force the Human Test live for all participants?' : 'Return event phase control to the scheduled timeline?'}</p>
         <div className="emergency-control__actions"><button type="button" onClick={() => setConfirming(null)}>CANCEL</button><button type="button" disabled={pending} onClick={confirm}>CONFIRM</button></div>
       </div>}
     </>}

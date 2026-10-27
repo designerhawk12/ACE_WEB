@@ -1,11 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { eventConfig, type EventPhase, type PuzzleContent } from '../config/event';
-import { enigmaProtocol } from '../config/enigmaProtocol';
 import { canSolveAt, getPhaseForWindow, type ManualPhaseOverride } from '../config/schedule';
 import { useScheduleWindow } from '../hooks/useEventClock';
 
 const SESSION_KEY = 'ace-puzzle-unlocked';
-// Old protocol solutions must not unlock this revised reconstruction.
+// Keep the existing revision so participants who already solved the challenge stay unlocked.
 const SESSION_REVISION = 'enigma-protocol-001';
 type EventRuntime = {
   phase: EventPhase;
@@ -80,7 +79,7 @@ export function EventProvider({ children }: { children: ReactNode }) {
   return <EventContext.Provider value={{
     phase, isDevPreview, accessGranted: puzzleActive && solved, hasSolvedPuzzle: solved, challengeOpen, manualOverride,
     applyManualOverride,
-    puzzle: puzzleActive ? eventConfig.puzzle ?? enigmaProtocol : null,
+    puzzle: puzzleActive ? eventConfig.puzzle : null,
     markSolved, reset,
   }}>{children}</EventContext.Provider>;
 }

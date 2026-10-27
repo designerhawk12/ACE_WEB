@@ -3,10 +3,9 @@ import { eventSchedule } from './schedule';
 export const eventPhases = ['teaser', 'puzzle', 'problem-unlocked', 'submission', 'closed'] as const;
 export type EventPhase = (typeof eventPhases)[number];
 export type PuzzleContent = {
-  ciphertext: string;
-  protocolTitle: string;
-  instructions: string;
-  settings: readonly { label: string; value: string }[];
+  intro: readonly [string, string];
+  supportingLine: string;
+  question: string;
 };
 
 export type Domain = { id: string; name: string; description?: string };
@@ -32,7 +31,11 @@ export const eventConfig: EventConfig = {
   // LAUNCH BLOCKER: add the second-stage PPT form separately; never reuse initial registration.
   submissionUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSdG48YxOZh6ZK9DNZx3a44zI1bTS-SC1-3zbAoEHXdhEIGCmQ/viewform',
   submissionDeadline: eventSchedule.submissionDeadline,
-  puzzle: null,
+  puzzle: {
+    intro: ['We were going to make you decrypt Enigma.', 'Then we remembered you have classes.'],
+    supportingLine: 'So here is something slightly less unreasonable.',
+    question: 'How many E\'s are in "SEVENTEEN"?',
+  },
   domains: [
     { id: 'finance', name: 'Finance', description: 'Payments, personal finance, banking, investing, budgeting, lending, and other financial workflows.' },
     { id: 'agriculture', name: 'Agriculture', description: 'Digital tools for farming, crop planning, field monitoring, agricultural operations, marketplaces, and farm productivity.' },
@@ -72,7 +75,7 @@ export function getSubmissionUrl(): string | null {
 
 export const timelineMilestones = [
   { number: '01', name: 'Registration', note: 'Teams are welcome' },
-  { number: '02', name: 'Decoding Challenge', note: 'Decode to access the Domains' },
+  { number: '02', name: 'Human Test', note: 'Complete the quick check to access the Domains' },
   { number: '03', name: 'Domains', note: 'Choose your system' },
   { number: '04', name: 'PPT Submission', note: 'Show your process' },
   { number: '05', name: 'Shortlisting', note: 'Final review' },
@@ -105,19 +108,19 @@ export const phasePresentation: Record<EventPhase, PhasePresentation> = {
       pendingRegistrationDescription: 'The Domains are being prepared. Registration details will follow; stay close for the unlock.',
       plateCaption: 'OBJECTIVE / AWAITING RELEASE',
     },
-    challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the Domains' },
+    challengeMilestone: { name: 'Human Test', note: 'Complete the quick check to access the Domains' },
     currentMilestone: 0,
   },
   puzzle: {
-    headerLabel: 'EVENT / PUZZLE',
+    headerLabel: 'EVENT / HUMAN TEST',
     challenge: {
-      label: 'DECODING CHALLENGE',
+      label: 'HUMAN TEST',
       status: 'PHASE 01 / LIVE',
-      headline: 'ENIGMA PROTOCOL',
-      description: 'Solve the decoding challenge to unlock the Domains.',
-      plateCaption: 'OBJECTIVE / DECODE',
+      headline: 'THE HUMAN TEST',
+      description: 'Complete the quick check to unlock the Domains.',
+      plateCaption: 'OBJECTIVE / QUICK CHECK',
     },
-    challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the Domains' },
+    challengeMilestone: { name: 'Human Test', note: 'Complete the quick check to access the Domains' },
     currentMilestone: 1,
   },
   'problem-unlocked': {
@@ -126,10 +129,10 @@ export const phasePresentation: Record<EventPhase, PhasePresentation> = {
       label: 'DOMAINS',
       status: 'PHASE 02 / UNLOCKED',
       headline: 'ACCESS GRANTED',
-      description: 'The Domains become available after the decoding challenge is solved.',
+      description: 'The Domains become available after the Human Test is completed.',
       plateCaption: 'OBJECTIVE / UNLOCKED',
     },
-    challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the Domains' },
+    challengeMilestone: { name: 'Human Test', note: 'Complete the quick check to access the Domains' },
     currentMilestone: 2,
   },
   submission: {
@@ -141,19 +144,19 @@ export const phasePresentation: Record<EventPhase, PhasePresentation> = {
       description: 'Package your process, evidence, and findings for review.',
       plateCaption: 'OBJECTIVE / SUBMIT',
     },
-    challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the Domains' },
+    challengeMilestone: { name: 'Human Test', note: 'Complete the quick check to access the Domains' },
     currentMilestone: 3,
   },
   closed: {
     headerLabel: 'EVENT / CLOSED',
     challenge: {
-      label: 'DECODING CHALLENGE',
+      label: 'HUMAN TEST',
       status: 'ARCHIVE / CLOSED',
       headline: 'CHALLENGE ENDED',
-      description: 'The decoding window has closed. New answers are no longer accepted.',
+      description: 'The Human Test window has closed. New answers are no longer accepted.',
       plateCaption: 'OBJECTIVE / COMPLETE',
     },
-    challengeMilestone: { name: 'Decoding Challenge', note: 'Decode to access the Domains' },
+    challengeMilestone: { name: 'Human Test', note: 'Complete the quick check to access the Domains' },
     currentMilestone: null,
   },
 };

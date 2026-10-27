@@ -1,9 +1,11 @@
-// A client-side interaction gate, not protection for confidential content.
-const ANSWER_DIGEST = '720599c0d838c856e8e1a8eb7dd86089f49aeb52f72d68584b6a2b8d5e32685e';
-export const rejectionMessage = 'SEQUENCE REJECTED. VERIFY THE SETTINGS.';
+// This is a playful interaction gate, not protection for confidential content.
+export const MAX_WRONG_ATTEMPTS = 3;
 
-export async function verifyAnswer(answer: string): Promise<boolean> {
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(answer.trim().toUpperCase().replace(/\s+/g, '')));
-  const hex = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('');
-  return hex === ANSWER_DIGEST;
+export function verifyAnswer(answer: string): boolean {
+  return answer.trim() === '4';
+}
+
+export function feedbackForWrongAttempt(attempt: number): string {
+  if (attempt >= MAX_WRONG_ATTEMPTS) return 'FINE. THE ANSWER IS 4. YOU WIN ANYWAY.';
+  return attempt === 2 ? 'ONE MORE TRY. THIS IS NOT SUPPOSED TO BE HARD.' : 'NOT QUITE. TRY AGAIN.';
 }

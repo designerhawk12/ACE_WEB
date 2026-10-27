@@ -29,7 +29,7 @@ export function ChallengeStatus({ phase }: ChallengeStatusProps) {
         </div>
 
         {phase === 'teaser' ? <div className="challenge__countdown">
-          <p className="eyebrow">DECODING CHALLENGE / RELEASE</p>
+          <p className="eyebrow">HUMAN TEST / RELEASE</p>
           <ScheduleReadout kind="challenge" className="challenge__countdown-readout" />
           <time className="challenge__countdown-footer" dateTime={eventSchedule.challengeStart}>{formatIstDate(eventSchedule.challengeStart)}</time>
         </div> : <div className="challenge__plate" aria-label={`${content.label}: ${content.headline}`}>

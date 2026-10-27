@@ -1,11 +1,11 @@
 import type { RefObject } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 
-export function PuzzleSuccess({ headingRef }: { headingRef: RefObject<HTMLHeadingElement | null> }) {
+export function PuzzleSuccess({ headingRef, message }: { headingRef: RefObject<HTMLHeadingElement | null>; message: string }) {
   const reduced = useReducedMotion();
   return <motion.div className="puzzle-success" initial={{ opacity: reduced ? 1 : 0 }} animate={{ opacity: 1 }} transition={{ duration: reduced ? 0 : 0.3 }}>
     <p className="eyebrow challenge__kicker">PHASE 02 / UNLOCKED</p>
     <h2 id="challenge-title" ref={headingRef} tabIndex={-1}>ACCESS GRANTED</h2>
-    <motion.p className="puzzle-success__message" initial={{ opacity: 1 }} animate={{ opacity: reduced ? 1 : 0 }} transition={{ delay: reduced ? 0 : 1.3, duration: reduced ? 0 : 0.25 }}>THAT WAS FAST.</motion.p>
+    <p className="puzzle-success__message" role="status">{message}</p>
   </motion.div>;
 }

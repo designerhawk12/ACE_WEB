@@ -5,7 +5,7 @@ import { createServer } from 'vite';
 test('central links and seven-stage timeline keep forms distinct', async () => {
   const server = await createServer({ server: { middlewareMode: true }, appType: 'custom' });
   try {
-    const { eventConfig, getPublicEventUrl, getSubmissionUrl, timelineMilestones } = await server.ssrLoadModule('/src/config/event.ts');
+    const { eventConfig, getPublicEventUrl, getSubmissionUrl, timelineMilestones, phasePresentation } = await server.ssrLoadModule('/src/config/event.ts');
     assert.equal(eventConfig.eventPhase, 'teaser');
     assert.deepEqual(eventConfig.domains.map(({ id, name }) => [id, name]), [
       ['finance', 'Finance'],
@@ -24,9 +24,13 @@ test('central links and seven-stage timeline keep forms distinct', async () => {
     ]);
     assert.ok(eventConfig.domains.every(({ description }) => description?.length > 30), 'each Domain needs a useful participant description');
     assert.deepEqual(timelineMilestones.map(({ name }) => name), [
-      'Registration', 'Decoding Challenge', 'Domains', 'PPT Submission',
+      'Registration', 'Human Test', 'Domains', 'PPT Submission',
       'Shortlisting', 'Presentations', 'Winner Announcement',
     ]);
+    assert.equal(timelineMilestones[1].note, 'Complete the quick check to access the Domains');
+    assert.equal(eventConfig.puzzle?.question, 'How many E\'s are in "SEVENTEEN"?');
+    assert.deepEqual(eventConfig.puzzle?.intro, ['We were going to make you decrypt Enigma.', 'Then we remembered you have classes.']);
+    assert.equal(phasePresentation.puzzle.challenge.headline, 'THE HUMAN TEST');
     assert.equal(getPublicEventUrl('https://example.com/register'), null);
     assert.equal(getPublicEventUrl('http://forms.example.org/form'), null);
     assert.equal(getPublicEventUrl('not a url'), null);
