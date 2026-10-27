@@ -1,5 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { Analytics } from '@vercel/analytics/react';
 import App from './App';
 import { EventProvider } from './context/EventRuntime';
 import './index.css';
@@ -13,5 +14,6 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <React.StrictMode>
     <EventProvider><App /></EventProvider>
+    <Analytics />
   </React.StrictMode>,
 );
