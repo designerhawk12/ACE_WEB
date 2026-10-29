@@ -42,7 +42,7 @@ const slides = [
 ] as const;
 
 export function PptSubmissionFormat() {
-  return <section className="unlocked-guide__section ppt-format" aria-labelledby="ppt-format-title">
+  return <section className="participant-guide__section ppt-format" aria-labelledby="ppt-format-title">
     <p className="eyebrow">06 / SUBMISSION REFERENCE</p>
     <h3 id="ppt-format-title">PPT SUBMISSION FORMAT</h3>
     <p>Use the following 4-slide structure as a reference when preparing your submission.</p>

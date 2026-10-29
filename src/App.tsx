@@ -1,21 +1,16 @@
-import { useCallback, useRef, useState, type MouseEvent } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { CinematicIntro } from './components/CinematicIntro';
-import { EventPhaseContent } from './components/EventPhaseContent';
 import { EventTimeline } from './components/EventTimeline';
 import { HeroVideo } from './components/HeroVideo';
-import { EmergencyEventControl } from './components/EmergencyEventControl';
 import { FloatingRegistrationAction } from './components/FloatingRegistrationAction';
 import { SubmissionAction } from './components/SubmissionAction';
+import { SubmissionNextSteps } from './components/SubmissionNextSteps';
 import { useTeaserMotion } from './hooks/useTeaserMotion';
-import { useEventRuntime } from './context/EventRuntime';
-import { eventConfig, getPublicEventUrl, phasePresentation } from './config/event';
-import { isRegistrationOpenAt } from './config/schedule';
-import { useRegistrationOpen, useSubmissionOpen } from './hooks/useEventClock';
-import { nextTap, type TapSequence } from './lib/emergencyTap';
+import { eventConfig, getPublicEventUrl } from './config/event';
 
-function BrandMark({ onClick }: { onClick?: (event: MouseEvent<HTMLAnchorElement>) => void }) {
+function BrandMark() {
   return (
-    <a className="brand" href="#top" aria-label="ACE Club — back to top" onClick={onClick}>
+    <a className="brand" href="#top" aria-label="ACE Club — back to top">
       <img src="/ace-mark.svg" alt="" width="34" height="34" />
       <span className="brand__wordmark">ACE <span>CLUB</span></span>
     </a>
@@ -32,32 +27,25 @@ type EventActionProps = {
   index: string;
   label: string;
   state: string;
-  registration?: boolean;
 };
 
-function EventAction({ className, href, index, label, state, registration = false }: EventActionProps) {
-  const registrationOpen = useRegistrationOpen();
-  const closed = registration && !registrationOpen;
-  const publicUrl = closed ? null : getPublicEventUrl(href);
+function EventAction({ className, href, index, label, state }: EventActionProps) {
+  const publicUrl = getPublicEventUrl(href);
   const content = <>
-    <span className="action-card__index">{index} / {closed ? 'REGISTRATIONS ENDED' : publicUrl ? state : 'LINK PENDING'}</span>
+    <span className="action-card__index">{index} / {publicUrl ? state : 'LINK PENDING'}</span>
     <span className="action-card__label">{label}</span>
     <ArrowIcon />
   </>;
 
   if (!publicUrl) {
-    return <button aria-label={`${label} — ${closed ? 'registrations ended' : 'link pending'}`} className={`action-card ${className} action-card--pending`} disabled title={closed ? 'Registrations ended' : 'Link pending; check back soon'} type="button">{content}</button>;
+    return <button aria-label={`${label} — link pending`} className={`action-card ${className} action-card--pending`} disabled title="Link pending; check back soon" type="button">{content}</button>;
   }
 
-  return <a className={`action-card ${className}`} href={publicUrl} onClick={registration ? event => { if (!isRegistrationOpenAt(Date.now())) event.preventDefault(); } : undefined} rel="noopener noreferrer" target="_blank">{content}</a>;
+  return <a className={`action-card ${className}`} href={publicUrl} rel="noopener noreferrer" target="_blank">{content}</a>;
 }
 
 export default function App() {
-  const { phase } = useEventRuntime();
-  const submissionOpen = useSubmissionOpen();
   const [introOpen, setIntroOpen] = useState(true);
-  const [controlOpen, setControlOpen] = useState(false);
-  const tapsRef = useRef<TapSequence>({ count: 0, startedAt: 0 });
   const introDismissedRef = useRef(false);
   const mainRef = useRef<HTMLElement>(null);
   useTeaserMotion(mainRef, !introOpen);
@@ -72,13 +60,6 @@ export default function App() {
 
   const completeIntro = useCallback(() => dismissIntro(), [dismissIntro]);
   const skipIntro = useCallback(() => dismissIntro(), [dismissIntro]);
-  const onBrandClick = useCallback((event: MouseEvent<HTMLAnchorElement>) => {
-    const result = nextTap(tapsRef.current, Date.now());
-    tapsRef.current = result.sequence;
-    if (result.sequence.count > 1 || result.unlocked) event.preventDefault();
-    if (result.unlocked) setControlOpen(true);
-  }, []);
-
   return (
     <>
       {introOpen && <CinematicIntro onComplete={completeIntro} onSkip={skipIntro} />}
@@ -91,19 +72,18 @@ export default function App() {
         inert={introOpen ? true : undefined}
       >
         <header className="site-header page-gutter">
-          <BrandMark onClick={onBrandClick} />
+          <BrandMark />
           <nav className="site-nav" aria-label="Main navigation">
             <a href="#challenge">THE CHALLENGE</a>
             <a href="#timeline">SEQUENCE</a>
           </nav>
-          <span className="header-status"><i aria-hidden="true" /> {phasePresentation[phase].headerLabel}</span>
+          <span className="header-status"><i aria-hidden="true" /> EVENT / REVERSE ENGINEERING</span>
         </header>
 
         <main id="main-content" ref={mainRef} tabIndex={-1}>
           <section className="hero page-gutter" aria-labelledby="hero-title">
             <div className="hero__copy">
               <div className="hero__metadata">
-                {(phase === 'puzzle' || phase === 'problem-unlocked') && <span className="index-number" aria-label="Section 01">01</span>}
                 <span className="eyebrow">ACE PRESENTS</span>
                 <span className="hero__rule" aria-hidden="true" />
                 <span className="eyebrow">RESEARCH / 001</span>
@@ -125,7 +105,7 @@ export default function App() {
             <HeroVideo active={!introOpen} />
           </section>
 
-          <EventTimeline phase={phase} />
+          <EventTimeline />
 
           <section className="about section-rule page-gutter" aria-labelledby="about-title">
             <div className="section-index"><span className="index-number">03</span><span className="index-line" aria-hidden="true" /><span className="eyebrow">WHAT IS REVERSE ENGINEERING?</span></div>
@@ -161,13 +141,15 @@ export default function App() {
             </div>
           </section>
 
-          <EventPhaseContent phase={phase} />
+          <section className="submission-phase page-gutter" id="challenge" aria-label="Event information">
+            <SubmissionNextSteps />
+          </section>
 
           <section className="participate section-rule page-gutter" id="participate" aria-labelledby="participate-title">
             <div className="section-index"><span className="index-number">05</span><span className="index-line" aria-hidden="true" /><span className="eyebrow">PARTICIPATE</span></div>
             <h2 className="participate__heading" id="participate-title">Take the next step.</h2>
             <div className="action-band">
-              <EventAction className="action-card--register" href={eventConfig.registrationUrl} index="01 / REGISTER" label="Register for Event" state="OPEN" registration />
+              <EventAction className="action-card--register" href={eventConfig.registrationUrl} index="01 / REGISTER" label="Register for Event" state="OPEN" />
               <EventAction className="action-card--whatsapp" href={eventConfig.whatsappUrl} index="02 / CONNECT" label="Join WhatsApp Group" state="CONNECT" />
             </div>
           </section>
@@ -187,9 +169,8 @@ export default function App() {
       </div>
       {!introOpen && <div className="floating-actions">
         <FloatingRegistrationAction />
-        {submissionOpen && <SubmissionAction floating />}
+        <SubmissionAction floating />
       </div>}
-      <EmergencyEventControl open={controlOpen} onClose={() => setControlOpen(false)} />
     </>
   );
 }

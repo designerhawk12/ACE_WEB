@@ -9,28 +9,8 @@ async function loadPureTypeScript(path) {
   return import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`);
 }
 
-const { nextTap } = await loadPureTypeScript('../src/lib/emergencyTap.ts');
 const { createControlHandler } = await loadPureTypeScript('../server/controlCore.ts');
 const { createPhaseHandler } = await loadPureTypeScript('../server/phaseCore.ts');
-
-test('header trigger opens only on ten taps within seven seconds', () => {
-  let sequence = { count: 0, startedAt: 0 };
-  for (let count = 1; count <= 9; count++) {
-    const result = nextTap(sequence, 1000 + count * 200);
-    sequence = result.sequence;
-    assert.equal(result.unlocked, false);
-  }
-  assert.equal(nextTap(sequence, 3000).unlocked, true);
-  assert.equal(nextTap(sequence, 10000).sequence.count, 1);
-});
-
-test('expired tap window resets rather than unlocking', () => {
-  let sequence = { count: 0, startedAt: 0 };
-  for (let count = 0; count < 9; count++) sequence = nextTap(sequence, 1000 + count * 100).sequence;
-  const result = nextTap(sequence, 9000);
-  assert.equal(result.unlocked, false);
-  assert.equal(result.sequence.count, 1);
-});
 
 function request(operation, password, ip = '192.0.2.8') {
   return new Request('https://ace.example/api/event-control', {
