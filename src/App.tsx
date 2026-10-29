@@ -3,8 +3,7 @@ import { CinematicIntro } from './components/CinematicIntro';
 import { EventTimeline } from './components/EventTimeline';
 import { HeroVideo } from './components/HeroVideo';
 import { FloatingRegistrationAction } from './components/FloatingRegistrationAction';
-import { SubmissionAction } from './components/SubmissionAction';
-import { SubmissionNextSteps } from './components/SubmissionNextSteps';
+import { ParticipantGuide } from './components/ParticipantGuide';
 import { useTeaserMotion } from './hooks/useTeaserMotion';
 import { eventConfig, getPublicEventUrl } from './config/event';
 
@@ -141,8 +140,8 @@ export default function App() {
             </div>
           </section>
 
-          <section className="submission-phase page-gutter" id="challenge" aria-label="Event information">
-            <SubmissionNextSteps />
+          <section className="event-guide-section page-gutter" id="challenge" aria-label="Event information">
+            <ParticipantGuide />
           </section>
 
           <section className="participate section-rule page-gutter" id="participate" aria-labelledby="participate-title">
@@ -169,7 +168,6 @@ export default function App() {
       </div>
       {!introOpen && <div className="floating-actions">
         <FloatingRegistrationAction />
-        <SubmissionAction floating />
       </div>}
     </>
   );

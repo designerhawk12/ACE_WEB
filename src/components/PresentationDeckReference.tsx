@@ -41,15 +41,15 @@ const slides = [
   },
 ] as const;
 
-export function PptSubmissionFormat() {
-  return <section className="participant-guide__section ppt-format" aria-labelledby="ppt-format-title">
-    <p className="eyebrow">06 / SUBMISSION REFERENCE</p>
-    <h3 id="ppt-format-title">PPT SUBMISSION FORMAT</h3>
-    <p>Use the following 4-slide structure as a reference when preparing your submission.</p>
-    <ol className="ppt-format__slides">
-      {slides.map(slide => <li className="ppt-format__slide" key={slide.number}>
-        <div className="ppt-format__slide-heading">
-          <span className="ppt-format__number" aria-hidden="true">{slide.number}</span>
+export function PresentationDeckReference() {
+  return <section className="participant-guide__section presentation-deck" aria-labelledby="presentation-deck-title">
+    <p className="eyebrow">06 / PRESENTATION SUPPORT</p>
+    <h3 id="presentation-deck-title">PRESENTATION DECK REFERENCE</h3>
+    <p>Use this four-slide structure to organize your presentation, if helpful.</p>
+    <ol className="presentation-deck__slides">
+      {slides.map(slide => <li className="presentation-deck__slide" key={slide.number}>
+        <div className="presentation-deck__slide-heading">
+          <span className="presentation-deck__number" aria-hidden="true">{slide.number}</span>
           <h4>{slide.title}</h4>
         </div>
         <ul>{slide.points.map(point => <li key={point}>{point}</li>)}</ul>

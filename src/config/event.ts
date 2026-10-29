@@ -3,7 +3,6 @@ export type Domain = { id: string; name: string; description?: string };
 type EventConfig = {
   registrationUrl: string;
   whatsappUrl: string;
-  submissionUrl: string | null;
   domains: readonly Domain[];
 };
 
@@ -13,8 +12,6 @@ export const eventConfig: EventConfig = {
   registrationUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSd19CzZZ30af_LDPY54VTQPymOe7A_tALptnVRXTBgC6MFTYA/viewform',
   // Verify the invitation in WhatsApp before publishing; syntax alone cannot confirm it is active.
   whatsappUrl: 'https://chat.whatsapp.com/IlVGvqCeiSN7LM8VBNl43n',
-  // LAUNCH BLOCKER: add the second-stage PPT form separately; never reuse initial registration.
-  submissionUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSdG48YxOZh6ZK9DNZx3a44zI1bTS-SC1-3zbAoEHXdhEIGCmQ/viewform',
   domains: [
     { id: 'finance', name: 'Finance', description: 'Payments, personal finance, banking, investing, budgeting, lending, and other financial workflows.' },
     { id: 'agriculture', name: 'Agriculture', description: 'Digital tools for farming, crop planning, field monitoring, agricultural operations, marketplaces, and farm productivity.' },
@@ -45,17 +42,45 @@ export function getPublicEventUrl(value: string | null): string | null {
   }
 }
 
-export function getSubmissionUrl(): string | null {
-  const url = getPublicEventUrl(eventConfig.submissionUrl);
-  if (!url || url === getPublicEventUrl(eventConfig.registrationUrl)) return null;
-  return url;
-}
-
 export const timelineMilestones = [
-  { number: '01', name: 'Registration', note: 'Teams are welcome' },
-  { number: '02', name: 'Domains', note: 'Choose your system' },
-  { number: '03', name: 'PPT Submission', note: 'Show your process' },
-  { number: '04', name: 'Shortlisting', note: 'Final review' },
-  { number: '05', name: 'Presentations', note: 'Present your prototype' },
-  { number: '06', name: 'Winner Announcement', note: 'Final result' },
+  {
+    number: '01',
+    name: 'Register Your Team',
+    note: 'Start with event registration.',
+    details: ['Complete the event registration form and follow its instructions.'],
+    state: 'REGISTER',
+  },
+  {
+    number: '02',
+    name: 'Explore the Domains',
+    note: 'Choose a system worth understanding.',
+    details: [
+      'Explore the available Domains and understand the event rules.',
+      'Choose a suitable closed-source software product and identify a feature or limitation to work on.',
+    ],
+    state: 'EXPLORE',
+  },
+  {
+    number: '03',
+    name: 'Reverse Engineer & Build',
+    note: 'Trace the logic, then make it work.',
+    details: [
+      'Analyze the selected software and understand how the chosen feature works.',
+      'Develop a working prototype that recreates, improves, or reimagines the feature.',
+      'Prepare a PPT to support your final presentation.',
+    ],
+    state: 'PROTOTYPE',
+  },
+  {
+    number: '04',
+    name: 'Present Your Prototype',
+    note: 'Every registered team moves directly to presentations.',
+    details: [
+      'All registered teams proceed directly to the presentation round.',
+      'Demonstrate the working prototype and explain your analysis, implementation, and improvements.',
+      'Use a PPT as supporting material during the presentation, if required.',
+      'There is no preliminary PPT submission or shortlisting round.',
+    ],
+    state: 'ALL TEAMS',
+  },
 ] as const;

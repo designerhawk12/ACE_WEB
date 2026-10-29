@@ -2,8 +2,6 @@ import { eventConfig, getPublicEventUrl, timelineMilestones } from '../config/ev
 
 export function EventTimeline() {
   const registrationPending = !getPublicEventUrl(eventConfig.registrationUrl);
-  const registrationNote = registrationPending ? 'Link to follow' : timelineMilestones[0].note;
-  const statuses = [registrationPending ? 'LINK PENDING' : 'OPEN', 'AVAILABLE', 'AVAILABLE', 'PENDING', 'PENDING', 'PENDING'];
 
   return (
     <section className="timeline section-rule" id="timeline" aria-labelledby="timeline-title">
@@ -13,24 +11,22 @@ export function EventTimeline() {
           <span className="index-line" aria-hidden="true" />
           <span className="eyebrow">SEQUENCE / STATUS</span>
         </div>
-        <h2 id="timeline-title">A process,<br /><em>in six parts.</em></h2>
-        <p>The order of operations, from registration through final results.</p>
+        <h2 id="timeline-title">A process,<br /><em>in four stages.</em></h2>
+        <p>From the first registration to a live prototype presentation.</p>
       </div>
 
       <ol className="timeline__list">
         <li className="timeline__progress" aria-hidden="true" />
         {timelineMilestones.map((item, index) => {
-          const name = item.name;
-          const note = index === 0 ? registrationNote : item.note;
-
           return (
             <li className="timeline__item" key={item.number}>
               <span className="timeline__number">{item.number}</span>
               <div className="timeline__copy">
-                <h3>{name}</h3>
-                <p>{note}</p>
+                <h3>{item.name}</h3>
+                <p>{index === 0 && registrationPending ? 'Registration link to follow.' : item.note}</p>
+                <ul className="timeline__details">{item.details.map(detail => <li key={detail}>{detail}</li>)}</ul>
               </div>
-              <span className="timeline__state">{statuses[index]}</span>
+              <span className="timeline__state">{index === 0 && registrationPending ? 'LINK PENDING' : item.state}</span>
             </li>
           );
         })}

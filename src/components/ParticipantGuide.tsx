@@ -1,18 +1,10 @@
 import { eventConfig } from '../config/event';
-import { SubmissionAction } from './SubmissionAction';
-import { PptSubmissionFormat } from './PptSubmissionFormat';
+import { PresentationDeckReference } from './PresentationDeckReference';
 
-export function SubmissionNextSteps() {
+export function ParticipantGuide() {
   const domains = eventConfig.domains;
 
   return <div className="participant-guide">
-    <section className="participant-guide__notice" aria-labelledby="submission-notice-title">
-      <p className="eyebrow">IMPORTANT / TWO SEPARATE STEPS</p>
-      <h3 id="submission-notice-title">Already registered?<br /><em>You’re not done yet.</em></h3>
-      <p>Registration confirms participation. After selecting a Domain and preparing your solution, you or your team must also submit a PPT through the separate final form. Enter your participant or team details and selected Domain in that form.</p>
-      <SubmissionAction />
-    </section>
-
     <section className="participant-guide__section" aria-labelledby="reverse-explained-title">
       <p className="eyebrow">01 / THE METHOD</p>
       <h3 id="reverse-explained-title">What is Reverse Engineering?</h3>
@@ -34,13 +26,14 @@ export function SubmissionNextSteps() {
         <li><span>02</span><p>Study its function, service, workflow, behavior, and user experience. Select one existing feature to recreate.</p></li>
         <li><span>03</span><p>Build that feature yourself from scratch, without the original codebase. You do not need to recreate the entire application.</p></li>
         <li><span>04</span><p>Add something of your own: a useful improvement, missing feature, creative extension, or better workflow.</p></li>
-        <li><span>05</span><p><strong>A functioning prototype is mandatory.</strong> It must demonstrate the recreated feature and your addition. An idea, static design, or PPT alone is not enough.</p></li>
+        <li><span>05</span><p><strong>A functioning prototype is mandatory.</strong> It must demonstrate the recreated feature and your addition. An idea or static design alone is not enough.</p></li>
       </ol>
     </section>
 
     <section className="participant-guide__section" aria-labelledby="evaluation-title">
       <p className="eyebrow">04 / EVALUATION</p>
-      <h3 id="evaluation-title">How your work is evaluated</h3>
+      <h3 id="evaluation-title">What the judges look for</h3>
+      <p>Every registered team presents directly to the judges, with the working prototype at the center of the review.</p>
       <div className="participant-guide__criteria">
         <div><h4>CREATIVITY</h4><p>How thoughtful, original, and useful your addition is.</p></div>
         <div><h4>FUNCTIONALITY</h4><p>How well the working prototype performs.</p></div>
@@ -55,13 +48,6 @@ export function SubmissionNextSteps() {
       <ul className="participant-guide__domains">{domains.map((domain, index) => <li key={domain.id}><span className="participant-guide__domain-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><div><h4>{domain.name}</h4>{domain.description && <p>{domain.description}</p>}</div></li>)}</ul>
     </section>
 
-    <PptSubmissionFormat />
-
-    <section className="participant-guide__section participant-guide__finish" aria-labelledby="submission-finish-title">
-      <p className="eyebrow">07 / FINAL STEP</p>
-      <h3 id="submission-finish-title">Select → Build → Submit</h3>
-      <p>Select a Domain and an eligible application. Recreate one feature, add your improvement, then prepare and submit your PPT through the final form.</p>
-      <SubmissionAction />
-    </section>
+    <PresentationDeckReference />
   </div>;
 }

@@ -4,10 +4,10 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { createServer } from 'vite';
 
-test('central links and six-stage timeline keep forms distinct', async () => {
+test('central registration links and four-stage event process remain configured', async () => {
   const server = await createServer({ server: { middlewareMode: true }, appType: 'custom' });
   try {
-    const { eventConfig, getPublicEventUrl, getSubmissionUrl, timelineMilestones } = await server.ssrLoadModule('/src/config/event.ts');
+    const { eventConfig, getPublicEventUrl, timelineMilestones } = await server.ssrLoadModule('/src/config/event.ts');
     assert.deepEqual(eventConfig.domains.map(({ id, name }) => [id, name]), [
       ['finance', 'Finance'],
       ['agriculture', 'Agriculture'],
@@ -25,27 +25,21 @@ test('central links and six-stage timeline keep forms distinct', async () => {
     ]);
     assert.ok(eventConfig.domains.every(({ description }) => description?.length > 30), 'each Domain needs a useful participant description');
     assert.deepEqual(timelineMilestones.map(({ name }) => name), [
-      'Registration', 'Domains', 'PPT Submission', 'Shortlisting', 'Presentations', 'Winner Announcement',
+      'Register Your Team', 'Explore the Domains', 'Reverse Engineer & Build', 'Present Your Prototype',
     ]);
+    assert.equal(timelineMilestones.length, 4);
+    assert.ok(timelineMilestones[0].details.some(detail => detail.includes('registration form')));
+    assert.ok(timelineMilestones[1].details.some(detail => detail.includes('closed-source')));
+    assert.ok(timelineMilestones[2].details.some(detail => detail.includes('Prepare a PPT')));
+    assert.ok(timelineMilestones[3].details.some(detail => detail.includes('All registered teams')));
+    assert.ok(timelineMilestones[3].details.some(detail => detail.includes('supporting material')));
+    assert.ok(timelineMilestones[3].details.some(detail => detail.includes('no preliminary PPT submission or shortlisting')));
     assert.equal(getPublicEventUrl('https://example.com/register'), null);
     assert.equal(getPublicEventUrl('http://forms.example.org/form'), null);
     assert.equal(getPublicEventUrl('not a url'), null);
     assert.ok(getPublicEventUrl(eventConfig.registrationUrl)?.startsWith('https://docs.google.com/forms/'), 'configured registration form must stay actionable');
     assert.ok(getPublicEventUrl(eventConfig.whatsappUrl)?.startsWith('https://chat.whatsapp.com/'));
-    assert.equal(getSubmissionUrl(), eventConfig.submissionUrl, 'configured final form must stay actionable');
-
-    const originalRegistration = eventConfig.registrationUrl;
-    const originalSubmission = eventConfig.submissionUrl;
-    try {
-      eventConfig.registrationUrl = 'https://forms.example.org/initial';
-      eventConfig.submissionUrl = eventConfig.registrationUrl;
-      assert.equal(getSubmissionUrl(), null, 'final form cannot reuse initial registration');
-      eventConfig.submissionUrl = 'https://forms.example.org/final';
-      assert.equal(getSubmissionUrl(), eventConfig.submissionUrl);
-    } finally {
-      eventConfig.registrationUrl = originalRegistration;
-      eventConfig.submissionUrl = originalSubmission;
-    }
+    assert.equal('submissionUrl' in eventConfig, false, 'there is no online PPT submission form in event config');
   } finally {
     await server.close();
   }
@@ -54,25 +48,30 @@ test('central links and six-stage timeline keep forms distinct', async () => {
 test('participant content and configured actions render without puzzle or date gates', async () => {
   const server = await createServer({ server: { middlewareMode: true }, appType: 'custom' });
   try {
-    const [{ default: App }, { eventConfig }, { FloatingRegistrationAction }, { SubmissionAction }] = await Promise.all([
+    const [{ default: App }, { eventConfig }, { FloatingRegistrationAction }] = await Promise.all([
       server.ssrLoadModule('/src/App.tsx'),
       server.ssrLoadModule('/src/config/event.ts'),
       server.ssrLoadModule('/src/components/FloatingRegistrationAction.tsx'),
-      server.ssrLoadModule('/src/components/SubmissionAction.tsx'),
     ]);
     const html = renderToStaticMarkup(React.createElement(App));
-    const floatingActions = renderToStaticMarkup(React.createElement(React.Fragment, null,
-      React.createElement(FloatingRegistrationAction),
-      React.createElement(SubmissionAction, { floating: true }),
-    ));
+    const floatingRegistration = renderToStaticMarkup(React.createElement(FloatingRegistrationAction));
 
     assert.equal((html.match(/class="participant-guide__domain-index"/g) ?? []).length, 13);
-    assert.match(html, /PPT SUBMISSION FORMAT/);
+    assert.equal((html.match(/class="timeline__item"/g) ?? []).length, 4);
+    assert.match(html, /A process,<br\/><em>in four stages\.<\/em>/);
+    assert.match(html, /All registered teams proceed directly to the presentation round\./);
+    assert.match(html, /Every registered team presents directly to the judges/);
+    assert.match(html, /Demonstrate the working prototype and explain your analysis, implementation, and improvements\./);
+    assert.match(html, /Use a PPT as supporting material during the presentation, if required\./);
+    assert.match(html, /There is no preliminary PPT submission or shortlisting round\./);
+    assert.match(html, /PRESENTATION DECK REFERENCE/);
+    assert.match(html, /Use this four-slide structure to organize your presentation, if helpful\./);
     assert.doesNotMatch(html, /THE HUMAN TEST|How many E's|COUNTDOWN|REGISTRATION CLOSES|SUBMISSIONS ENDED/i);
-    assert.equal(html.split(`href="${eventConfig.registrationUrl}"`).length - 1, 1, 'the primary registration action uses the configured URL');
-    assert.equal(html.split(`href="${eventConfig.submissionUrl}"`).length - 1, 2, 'the primary and final submission actions use the configured URL');
-    assert.match(floatingActions, new RegExp(eventConfig.registrationUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
-    assert.match(floatingActions, new RegExp(eventConfig.submissionUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+    assert.doesNotMatch(html, /SUBMIT (?:YOUR )?PPT|PPT SUBMISSION FORMAT|final PPT form|upload a PPT/i);
+    assert.equal(html.split(`href="${eventConfig.registrationUrl}"`).length - 1, 1, 'the registration action uses the configured URL');
+    assert.equal(html.split(`href="${eventConfig.whatsappUrl}"`).length - 1, 1, 'the WhatsApp action uses the configured URL');
+    assert.match(floatingRegistration, new RegExp(eventConfig.registrationUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+    assert.doesNotMatch(floatingRegistration, /SUBMIT|PPT/i);
   } finally {
     await server.close();
   }
